@@ -1,0 +1,76 @@
+.container {
+    max-width: 1240px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+.header {
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.categoryBtn {
+    background: none;
+    border: none;
+    text-transform: uppercase;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.active {
+    color: #5ECE7B;
+    font-weight: 600;
+    border-bottom: 2px solid #5ECE7B;
+}
+
+.headerLogo {
+    padding: 20px;
+}
+
+.CartAndCurrency {
+    width: 235px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.CartAndCurrency>button {
+    background: none;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 40px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.CartAndCurrency>button>img {
+    width: 20px;
+}
+
+.currencies {
+    position: absolute;
+    top: 50px;
+    width: 114px;
+    height: 130px;
+    padding: 20px 0 20px;
+    background-color: white;
+    filter: drop-shadow(0px 4px 35px rgba(168, 172, 176, 0.19));
+}
+
+.currency {
+    display: block;
+    background: none;
+    width: 114px;
+    height: 45px;
+    border: none;
+}
+
+.currency:hover {
+    background: #EEEEEE;
+}
