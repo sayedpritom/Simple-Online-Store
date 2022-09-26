@@ -3,7 +3,6 @@ import {GET_GEN_3} from './gql/Query'
 
 const useMyQuery = () => {
     const { loading, error, data } = useQuery(GET_GEN_3);
-    console.log(data);
     return { loading, error, data }
 }
 

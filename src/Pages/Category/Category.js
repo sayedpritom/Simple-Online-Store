@@ -1,64 +1,83 @@
 import React, { Component } from 'react';
-import Header from '../../Components/Header/Header';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import './Category.css';
 import Card from './Card/Card';
+import UserContext from '../../Context/UserContext';
 
 
 class Category extends Component {
+  static contextType = UserContext;
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            products: []
-        }
+  constructor(props) {
+    super(props)
+    this.state = {
+      products: []
     }
+  }
 
-    componentDidMount() {
-        const client = new ApolloClient({
-            uri: 'http://localhost:4000/',
-            cache: new InMemoryCache(),
-          });
-          
-          client
-            .query({
-              query: gql`
-              {
-                categories {
-                  name
-                  products {
-                    name
-                    gallery
-                    prices {
-                      currency {
-                        label
-                      } 
-                      amount
-                    }
-                  }
-                }
-              }    
+  loadData() {
+    const client = new ApolloClient({
+      uri: 'http://localhost:4000/',
+      cache: new InMemoryCache(),
+    });
+
+    client
+      .query({
+        query: gql`
+        {
+          category(input: {title: ${JSON.stringify(this.context.category)}}) {
+            name
+            products {
+            id
+            name
+            gallery
+            prices {
+                  currency {
+                  label
+                  } 
+                amount
+              }
+            }
+          }
+        } 
               `,
-            })
-            .then((result) => this.setState({products: result.data.categories[0].products}));
-    }
+      })
+      .then((result) => {
 
-    render() {
-        console.log(this.state.products)
-        // console.log(this.state.products.array.forEach(element => {
-        //     console.log("object");
-        // }))
+        const newData = result.data.category?.products.length
+        const oldData = this.state.products?.length
 
-        return (
-            <div className='products'>
-                {this.state.products.map(product => {
-                    return <Card product={product} />
-                })}
-                
+        if (newData !== oldData) {
+          this.setState({ products: result.data.category.products })
+        }
+      });
+  }
 
-            </div>
-        );
-    }
+  componentDidMount() {
+    this.loadData()
+  }
+
+  componentDidUpdate() {
+    this.loadData()
+  }
+
+  render() {
+
+    return (
+      <div>
+        <h1 className='category-name'>{this.context.category}</h1>
+
+        <div className='products'>
+          {this.state.products.map(product => {
+            return <Card product={product} key={product.id} />
+          })}
+        </div>
+
+      </div>
+    );
+  }
 }
+
+// Category.contextType = AuthContext;
 
 export default Category;
