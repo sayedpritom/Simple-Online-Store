@@ -1,0 +1,10 @@
+.cart-heading {
+    font-family: 'Raleway';
+    font-weight: 700;
+    font-size: 32px;
+    text-transform: uppercase;
+    color: #1D1F22;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #E5E5E5;;
+}

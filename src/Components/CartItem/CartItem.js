@@ -13,7 +13,7 @@ class CartItem extends Component {
         this.state = {
             product: {},
             price: {},
-            preview: "",
+            preview: 0,
             color: "",
             otherAttributes: {}
         }
@@ -66,7 +66,6 @@ class CartItem extends Component {
                 // set the product details, price according to current currency & main preview image
                 this.setState({
                     product: result.data.product,
-                    preview: result.data.product.gallery[0],
                     price: {
                         label: price.currency.label,
                         symbol: price.currency.symbol,
@@ -106,8 +105,12 @@ class CartItem extends Component {
         const otherAttributes = attributes?.find(attribute => attribute.name !== "Color");
 
 
-        const changePreview = image => {
-            this.setState({ preview: image })
+        const next = preview => {
+            preview < gallery.length - 1 && this.setState({ preview: preview + 1 })
+
+        }
+        const previous = preview => {
+            preview > 0 && this.setState({ preview: preview - 1 })
         }
 
         const pickColor = (attribute) => {
@@ -115,18 +118,25 @@ class CartItem extends Component {
         }
 
         const pickOtherAttributes = (name, attribute) => {
-            this.setState({ otherAttributes: {
-                name: name,
-                value: attribute
-            } })
+            this.setState({
+                otherAttributes: {
+                    name: name,
+                    value: attribute
+                }
+            })
         }
 
         console.log(this);
         return (
             <div className='cart-items'>
                 <div className='product-info'>
-                    <h2 className='product-brand'>{brand}</h2>
+                    <h2 className='product-brand product-brand-in-cart'>{brand}</h2>
                     <h2 className='product-name'>{name}</h2>
+                    {/* Price */}
+                    <div className="product-price">
+                        <p className='price'>Price:</p>
+                        <p className='amount'>{this.state.price.symbol}{this.state.price.amount}</p>
+                    </div>
                     {/* Check for any attribute that is not about color if there is any then show it in it's style */}
                     {otherAttributes &&
                         <div>
@@ -145,19 +155,26 @@ class CartItem extends Component {
                             </div>
                         </div>
                     }
-                    <div className="product-price">
-                        <p className='price'>Price:</p>
-                        <p className='amount'>{this.state.price.symbol}{this.state.price.amount}</p>
-                    </div>
-                    <button className="add-to-cart-btn">Add To Cart</button>
                 </div>
                 <div className='product-thumbnails'>
                     {
-                        gallery?.map(image => <button key={image} onClick={() => changePreview(image)}> <img src={image} alt="" /></button>)
+                        // gallery?.map(image => <button key={image} onClick={() => next(image)}> <img src={image} alt="" /></button>)
                     }
                 </div>
-                <div className='product-main-image'>
-                    <img src={this.state.preview} alt="" />
+                <div className="quantity-and-preview-image">
+                    <div className="item-quantity">
+                        <button>+</button>
+                        <p>0</p>
+                        <button>-</button>
+                    </div>
+                    <div className='cart-item-image'>
+                        <img src={gallery?.[this.state.preview]} alt="" />
+                        {/* {console.log(gallery?.[this.state.preview])} */}
+                        <div className='next-previous-buttons'>
+                            <button onClick={() => previous(this.state.preview)}> &lt; </button>
+                            <button onClick={() => next(this.state.preview)}> &gt; </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
