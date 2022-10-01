@@ -9,8 +9,10 @@ export class UserProvider extends Component {
         this.state = {
             currency: 'USD',
             category: 'all',
-            symbol: '$'
+            symbol: '$',
+            cart: [],
         }
+        
       }
 
     setCurrency = (currency, symbol) => {
@@ -22,14 +24,22 @@ export class UserProvider extends Component {
         this.setState({category: category})
     }
 
+    setCart = cart => {
+        console.log(cart);
+        this.setState({cart})
+    }
+
     render() {
-        const {currency, category, symbol} = this.state;
-        const {setCurrency, setCategory} = this;
+        const {currency, category, symbol, cart} = this.state;
+        const {setCurrency, setCategory, setCart} = this;
+        // console.log(this.state.cart);
         return (
             <UserContext.Provider value={{
                 currency,
                 symbol,
                 category,
+                cart,
+                setCart,
                 setCurrency,
                 setCategory
             }}>
