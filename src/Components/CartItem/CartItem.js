@@ -15,7 +15,10 @@ class CartItem extends Component {
             price: {},
             preview: 0,
             color: "",
-            otherAttributes: {}
+            otherAttributes: {},
+            quantity: 0,
+            currency: "",
+            initial: true,
         }
     }
 
@@ -62,7 +65,6 @@ class CartItem extends Component {
 
                 const price = result.data.product.prices?.find(price => price.currency.label === this.context.currency)
 
-                console.log(result.data.product);
                 // set the product details, price according to current currency & main preview image
                 this.setState({
                     product: result.data.product,
@@ -95,6 +97,16 @@ class CartItem extends Component {
         this.loadData()
     }
 
+    componentDidUpdate() {
+
+        // Only reload if the currency is updated
+        const oldCurrency = this.state.price.label;
+        const newCurrency = this.context.currency;
+
+        if (oldCurrency !== newCurrency) {
+            this.loadData()
+        }
+    }
 
 
     render() {
@@ -113,8 +125,29 @@ class CartItem extends Component {
             preview > 0 && this.setState({ preview: preview - 1 })
         }
 
+
+        // Set the attributes in context too
+        const updateCartInContext = (name, value) => {
+
+            let updatedItem = {
+                id: this.props?.item.id,
+                color: this.state.color,
+                quantity: this.state.quantity,
+                otherAttributes: this.state.otherAttributes
+            }
+
+            if(name === "color" )  updatedItem.color = value;
+            
+            if (name === "quantity") updatedItem.quantity = value;
+
+            if (name === "otherAttributes") updatedItem.otherAttributes = value;
+
+            this.context.setCart([updatedItem])
+        }
+
         const pickColor = (attribute) => {
             this.setState({ color: attribute })
+            updateCartInContext("color", attribute)
         }
 
         const pickOtherAttributes = (name, attribute) => {
@@ -124,11 +157,44 @@ class CartItem extends Component {
                     value: attribute
                 }
             })
+            updateCartInContext("otherAttributes", attribute)
         }
 
-        console.log(this);
+        const changeQuantity = (input) => {
+            const currentQuantity = this.state.quantity;
+
+            let quantity = 0
+
+            if (input === "increase") quantity = currentQuantity + 1
+            
+            if (input === "decrease" && currentQuantity > 0) quantity = currentQuantity - 1
+            
+            this.setState({ quantity: quantity })
+            updateCartInContext("quantity", quantity)
+        }
+
+
+        // const currentContext = [...this.context.cart]
+        // const others = currentContext.filter(item => item.id !== this.props?.item.id)
+
+        // const updatedItem = {
+        //     id: this.props?.item.id,
+        //     quantity: this.state.quantity,
+        //     otherAttributes: this.state.otherAttributes
+        // }
+
+        // const newCart = [updatedItem, ...others]
+
+        // console.log("old", currentContext);
+        // console.log("new", newCart);
+        // console.log(currentContext === newCart);
+
+        if (this.state.initial) {
+            // this.context.setCart(newCart)
+        }
+
         return (
-            <div className='cart-items'>
+            <div className='cart-items' >
                 <div className='product-info'>
                     <h2 className='product-brand product-brand-in-cart'>{brand}</h2>
                     <h2 className='product-name'>{name}</h2>
@@ -163,9 +229,9 @@ class CartItem extends Component {
                 </div>
                 <div className="quantity-and-preview-image">
                     <div className="item-quantity">
-                        <button>+</button>
-                        <p>0</p>
-                        <button>-</button>
+                        <button onClick={() => changeQuantity("increase")}>+</button>
+                        <p>{this.state.quantity}</p>
+                        <button onClick={() => changeQuantity("decrease")}>-</button>
                     </div>
                     <div className='cart-item-image'>
                         <img src={gallery?.[this.state.preview]} alt="" />

@@ -36,7 +36,7 @@ export class UserProvider extends Component {
 
     setCart = cart => {
         this.setState({ 
-            cart,
+            cart: cart,
             initial: false
          })
     }
