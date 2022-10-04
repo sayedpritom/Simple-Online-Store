@@ -59,7 +59,7 @@ export class UserProvider extends Component {
                 initial: false
             })
         }
-        // if it's not initial stage then just keep a copy of the current state saved in session storage for future usage
+        // if it's not initial state then just keep a copy of the current state saved in session storage for future usage
         else {
             const currentState = {
                 currency: this.state.currency,

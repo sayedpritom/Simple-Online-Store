@@ -76,20 +76,7 @@ class CartItem extends Component {
 
                 })
 
-                // find out & set the color & other attributes
-                const color = result.data.product.attributes.find(attribute => attribute.name === "Color")
-                const otherAttributes = result.data.product.attributes.find(attribute => attribute.name !== "Color")
 
-
-
-                color && this.setState({ color: color.items[0].value })
-
-                otherAttributes && this.setState({
-                    otherAttributes: {
-                        name: otherAttributes.name,
-                        value: otherAttributes.items[0].value
-                    }
-                })
             });
     }
 
@@ -129,22 +116,51 @@ class CartItem extends Component {
         // Set the attributes in context too
         const updateCartInContext = (name, value) => {
 
-            let updatedItem = {
-                id: this.props?.item.id,
-                color: this.state.color,
-                quantity: this.state.quantity,
-                otherAttributes: this.state.otherAttributes
-            }
+            const currentContext = [...this.context.cart]
+            // const others = currentContext.filter(item => item.id !== this.props?.item.id)
 
-            if(name === "color" )  updatedItem.color = value;
-            
-            if (name === "quantity") updatedItem.quantity = value;
+            const updatedX = currentContext.map(item => {
 
-            if (name === "otherAttributes") updatedItem.otherAttributes = value;
+                if (item.id === this.props?.item.id) {
+                    item.id = this.props?.item.id;
+                    item.color = this.state.color;
+                    item.quantity = this.state.quantity;
+                    item.otherAttributes = this.state.otherAttributes
 
-            this.context.setCart([updatedItem])
+
+                    if (name === "color") item.color = value;
+
+                    if (name === "quantity") item.quantity = value;
+
+                    if (name === "otherAttributes") item.otherAttributes = value;
+
+                    // return item
+                }
+
+                return item;
+
+            })
+            this.context.setCart(updatedX)
+
+            // console.log(updatedX);
+
+            // let updatedItem = {
+            //     id: this.props?.item.id,
+            //     color: this.state.color,
+            //     quantity: this.state.quantity,
+            //     otherAttributes: this.state.otherAttributes
+            // }
+
+            // if (name === "color") updatedItem.color = value;
+
+            // if (name === "quantity") updatedItem.quantity = value;
+
+            // if (name === "otherAttributes") updatedItem.otherAttributes = value;
+
+            // this.context.setCart([updatedItem])
         }
 
+        // Attribute selectors
         const pickColor = (attribute) => {
             this.setState({ color: attribute })
             updateCartInContext("color", attribute)
@@ -157,7 +173,10 @@ class CartItem extends Component {
                     value: attribute
                 }
             })
-            updateCartInContext("otherAttributes", attribute)
+            updateCartInContext("otherAttributes", {
+                name: name,
+                value: attribute
+            })
         }
 
         const changeQuantity = (input) => {
@@ -166,31 +185,43 @@ class CartItem extends Component {
             let quantity = 0
 
             if (input === "increase") quantity = currentQuantity + 1
-            
+
             if (input === "decrease" && currentQuantity > 0) quantity = currentQuantity - 1
-            
+
             this.setState({ quantity: quantity })
             updateCartInContext("quantity", quantity)
         }
 
 
-        // const currentContext = [...this.context.cart]
-        // const others = currentContext.filter(item => item.id !== this.props?.item.id)
+        const savedAttributes = this.context.cart?.find(item => item.id === this.props?.item.id);
+        const attributesLength = Object.keys(savedAttributes).length;
 
-        // const updatedItem = {
-        //     id: this.props?.item.id,
-        //     quantity: this.state.quantity,
-        //     otherAttributes: this.state.otherAttributes
-        // }
+        console.log("render");
 
-        // const newCart = [updatedItem, ...others]
-
-        // console.log("old", currentContext);
-        // console.log("new", newCart);
-        // console.log(currentContext === newCart);
-
-        if (this.state.initial) {
-            // this.context.setCart(newCart)
+        // if length is more than 1 then it means it has not only the id but other properties too
+        // to prevent infinite loop the initial state is used.
+        if (attributesLength > 1 && this.state.initial) {
+            savedAttributes.color && this.setState({ color: savedAttributes.color})
+            savedAttributes.otherAttributes && this.setState({ otherAttributes: savedAttributes.otherAttributes})
+            savedAttributes.quantity && this.setState({ quantity: savedAttributes.quantity})
+            this.setState({initial: false})
+            console.log("jj");
+        } 
+        else if(this.state.initial) {
+            console.log("kk");
+            // find out color, attributes & set them
+            const colors = this.state.product.attributes?.find(attribute => attribute.name === "Color")
+            const otherAttributes = this.state.product.attributes?.find(attribute => attribute.name !== "Color")
+            
+            colors && this.setState({ color: colors.items[0].value})
+            
+            otherAttributes && this.setState({
+                otherAttributes: {
+                    name: otherAttributes.name,
+                    value: otherAttributes.items[0].value,
+                },
+            })
+            this.setState({initial: false})
         }
 
         return (
