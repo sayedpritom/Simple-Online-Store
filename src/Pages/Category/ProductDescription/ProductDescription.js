@@ -102,7 +102,7 @@ class ProductDescription extends Component {
         this.loadData()
     }
     componentDidUpdate() {
-        this.loadData()
+        // this.loadData()
     }
 
     render() {

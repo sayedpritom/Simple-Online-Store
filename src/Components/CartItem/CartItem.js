@@ -142,22 +142,6 @@ class CartItem extends Component {
             })
             this.context.setCart(updatedX)
 
-            // console.log(updatedX);
-
-            // let updatedItem = {
-            //     id: this.props?.item.id,
-            //     color: this.state.color,
-            //     quantity: this.state.quantity,
-            //     otherAttributes: this.state.otherAttributes
-            // }
-
-            // if (name === "color") updatedItem.color = value;
-
-            // if (name === "quantity") updatedItem.quantity = value;
-
-            // if (name === "otherAttributes") updatedItem.otherAttributes = value;
-
-            // this.context.setCart([updatedItem])
         }
 
         // Attribute selectors
@@ -201,31 +185,32 @@ class CartItem extends Component {
         // if length is more than 1 then it means it has not only the id but other properties too
         // to prevent infinite loop the initial state is used.
         if (attributesLength > 1 && this.state.initial) {
-            savedAttributes.color && this.setState({ color: savedAttributes.color})
-            savedAttributes.otherAttributes && this.setState({ otherAttributes: savedAttributes.otherAttributes})
-            savedAttributes.quantity && this.setState({ quantity: savedAttributes.quantity})
-            this.setState({initial: false})
+            savedAttributes.color && this.setState({ color: savedAttributes.color })
+            savedAttributes.otherAttributes && this.setState({ otherAttributes: savedAttributes.otherAttributes })
+            savedAttributes.quantity && this.setState({ quantity: savedAttributes.quantity })
+            this.setState({ initial: false })
             console.log("jj");
-        } 
-        else if(this.state.initial) {
+        }
+        else if (this.state.initial) {
             console.log("kk");
             // find out color, attributes & set them
             const colors = this.state.product.attributes?.find(attribute => attribute.name === "Color")
             const otherAttributes = this.state.product.attributes?.find(attribute => attribute.name !== "Color")
-            
-            colors && this.setState({ color: colors.items[0].value})
-            
+            console.log(colors, this.state.product);
+            colors && this.setState({ color: colors.items[0].value })
+
             otherAttributes && this.setState({
                 otherAttributes: {
                     name: otherAttributes.name,
                     value: otherAttributes.items[0].value,
                 },
+                initial: false
             })
-            this.setState({initial: false})
+            // this.setState({initial: false})
         }
 
         return (
-            <div className='cart-items' >
+            <div className='cart-item' >
                 <div className='product-info'>
                     <h2 className='product-brand product-brand-in-cart'>{brand}</h2>
                     <h2 className='product-name'>{name}</h2>
@@ -251,11 +236,6 @@ class CartItem extends Component {
                                 {colorAttribute.items.map(item => <button className={`${item.value === this.state.color && 'selected-color-attribute'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
                             </div>
                         </div>
-                    }
-                </div>
-                <div className='product-thumbnails'>
-                    {
-                        // gallery?.map(image => <button key={image} onClick={() => next(image)}> <img src={image} alt="" /></button>)
                     }
                 </div>
                 <div className="quantity-and-preview-image">
