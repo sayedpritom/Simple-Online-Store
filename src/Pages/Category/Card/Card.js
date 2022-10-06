@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import navigator from '../../../Components/HOC/navigator';
 import UserContext from '../../../Context/UserContext';
 import cartIcon from '../../../Images/Icons/Green-Cart-Icon.svg'
 import './Card.css'
-import { useNavigate } from "react-router-dom";
 
-function navigate(Component) {
-    return function WrappedComponent(props) {
-        const navigator = useNavigate();
-        return <Component {...props} navigator={navigator} />;
-    }
-}
 
 
 class Card extends Component {
@@ -21,16 +15,20 @@ class Card extends Component {
         let price = prices.find(price => price.currency.label === this.context.currency && price.currency.label)
 
         const addToCart = id => {
+
             let oldCart = [this.context.cart]
             let newCart = [{ id }, ...oldCart]
 
-            if (oldCart !== newCart) this.context.setCart([{ id }, ...this.context.cart])
-            // console.log(oldCart, newCart);
+            const currentCartContext = this.context.cart;
+            const alreadyExists = currentCartContext.find(item => item.id === id);
+
+            if (!alreadyExists && oldCart !== newCart) this.context.setCart([{ id }, ...this.context.cart])
+
         }
 
         const redirectToDescriptionPage = (e) => {
             console.log(e.target.className);
-            e.target.className !== "green-cart-icon-image" && this.props.navigator(`/pdp/${id}`);
+            e.target.className !== "green-cart-icon-image" && this.props.navigate(`/pdp/${id}`);
         }
 
         return (
@@ -48,4 +46,4 @@ class Card extends Component {
     }
 }
 
-export default navigate(Card);
+export default navigator(Card);

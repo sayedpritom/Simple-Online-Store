@@ -127,6 +127,25 @@ class ProductDescription extends Component {
             } })
         }
 
+        const addToCart = id => {
+
+            const color = this.state.color;
+            const otherAttributes = this.state.otherAttributes;
+
+            const currentCartContext = this.context.cart;
+            const alreadyExisting = currentCartContext.map(item => {
+                if(item.id === id) return item
+            } );
+
+            const matchedAny = alreadyExisting.map(item => JSON.stringify(item) === JSON.stringify({ id, color, otherAttributes }));
+
+            const yesGo = matchedAny.find(item => item === true) ? "found" : "notFound"
+
+            if(yesGo === "notFound") {
+                this.context.setCart([{ id, color, otherAttributes }, ...this.context.cart])
+            }
+        }
+
         return (
             <div className='product-description'>
                 <div className='product-thumbnails'>
@@ -140,7 +159,7 @@ class ProductDescription extends Component {
                 <div className='product-info'>
                     <h2 className='product-brand'>{brand}</h2>
                     <h2 className='product-name'>{name}</h2>
-                    {/* Check for any attribute that is not about color if there is any then show it in it's style */}
+                    {/* Check for totalExisting attribute that is not about color if there is totalExisting then show it in it's style */}
                     {otherAttributes &&
                         <div>
                             <p className='others'>{otherAttributes.name}</p>
@@ -162,7 +181,7 @@ class ProductDescription extends Component {
                         <p className='price'>Price:</p>
                         <p className='amount'>{this.state.price.symbol}{this.state.price.amount}</p>
                     </div>
-                    <button className="add-to-cart-btn">Add To Cart</button>
+                    <button onClick={() => addToCart(id)} className="add-to-cart-btn">Add To Cart</button>
                     <div className='product-description-text' dangerouslySetInnerHTML={createMarkup(description)}></div>
                 </div>
             </div>
