@@ -68,7 +68,7 @@ class ProductDescription extends Component {
             .then((result) => {
 
                 const price = result.data.product.prices?.find(price => price.currency.label === this.context.currency)
-                
+
                 // set the product details, price according to current currency & main preview image
                 this.setState({
                     product: result.data.product,
@@ -84,7 +84,7 @@ class ProductDescription extends Component {
                 // find out & set the color & other attributes
                 const color = result.data.product.attributes.find(attribute => attribute.name === "Color")
                 const otherAttributes = result.data.product.attributes.find(attribute => attribute.name !== "Color")
-                
+
 
 
                 color && this.setState({ color: color.items[0].value })
@@ -121,28 +121,35 @@ class ProductDescription extends Component {
         }
 
         const pickOtherAttributes = (name, attribute) => {
-            this.setState({ otherAttributes: {
-                name: name,
-                value: attribute
-            } })
+            this.setState({
+                otherAttributes: {
+                    name: name,
+                    value: attribute
+                }
+            })
         }
 
         const addToCart = id => {
-
+            debugger
             const color = this.state.color;
             const otherAttributes = this.state.otherAttributes;
 
             const currentCartContext = this.context.cart;
-            const alreadyExisting = currentCartContext.map(item => {
-                if(item.id === id) return item
-            } );
+            const index = currentCartContext.length + 1;
 
-            const matchedAny = alreadyExisting.map(item => JSON.stringify(item) === JSON.stringify({ id, color, otherAttributes }));
+            // removing the index by taking other properties(delete item.index removed index from context somehow)
+            const itemsMatchedById = currentCartContext.map(item => {
+                if (item.id === id) {
+                    return {id: item.id, color: item.color, otherAttributes: item.otherAttributes}
+                }
+            });
 
-            const yesGo = matchedAny.find(item => item === true) ? "found" : "notFound"
+            const numberOfMatchesByAttributes = itemsMatchedById.map(item => JSON.stringify(item) === JSON.stringify({ id, color, otherAttributes }));
 
-            if(yesGo === "notFound") {
-                this.context.setCart([{ id, color, otherAttributes }, ...this.context.cart])
+            const isFound = numberOfMatchesByAttributes.find(item => item === true) ? "found" : "notFound"
+
+            if (isFound === "notFound") {
+                this.context.setCart([{ id, color, otherAttributes, index }, ...this.context.cart])
             }
         }
 

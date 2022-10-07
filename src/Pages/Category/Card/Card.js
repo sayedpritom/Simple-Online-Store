@@ -11,23 +11,29 @@ class Card extends Component {
     static contextType = UserContext;
 
     render() {
-        const { id, name, gallery, prices, attributes, } = this.props.product;
+        const { id, name, gallery, prices, attributes } = this.props.product;
         let price = prices.find(price => price.currency.label === this.context.currency && price.currency.label)
 
         const addToCart = id => {
 
-            let oldCart = [this.context.cart]
-            let newCart = [{ id }, ...oldCart]
+            const color = (attributes.find(item => item.name === 'Color'))?.items[0].value
+            const others = attributes.find(item => item.name !== 'Color');
+
+            const name = others.name;
+            const value = others.items[0].value
+
+            const otherAttributes = {name, value}
 
             const currentCartContext = this.context.cart;
+            const index = currentCartContext.length + 1;
+
             const alreadyExists = currentCartContext.find(item => item.id === id);
 
-            if (!alreadyExists && oldCart !== newCart) this.context.setCart([{ id }, ...this.context.cart])
+            if (!alreadyExists) this.context.setCart([{ id, color, otherAttributes, index }, ...this.context.cart])
 
         }
 
         const redirectToDescriptionPage = (e) => {
-            console.log(e.target.className);
             e.target.className !== "green-cart-icon-image" && this.props.navigate(`/pdp/${id}`);
         }
 

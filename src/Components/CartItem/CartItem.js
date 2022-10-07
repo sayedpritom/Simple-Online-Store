@@ -86,7 +86,7 @@ class CartItem extends Component {
 
     componentDidUpdate() {
 
-        // Only reload if the currency is updated
+        // Only rerender if the currency is updated
         const oldCurrency = this.state.price.label;
         const newCurrency = this.context.currency;
 
@@ -104,24 +104,21 @@ class CartItem extends Component {
         const otherAttributes = attributes?.find(attribute => attribute.name !== "Color");
 
 
-        const next = preview => {
-            preview < gallery.length - 1 && this.setState({ preview: preview + 1 })
-
-        }
-        const previous = preview => {
-            preview > 0 && this.setState({ preview: preview - 1 })
-        }
+        // change the preview image
+        const next = preview => preview < gallery.length - 1 && this.setState({ preview: preview + 1 })
+        const previous = preview => preview > 0 && this.setState({ preview: preview - 1 })
 
 
         // Set the attributes in context too
         const updateCartInContext = (name, value) => {
+            
+            const currentContext = this.context.cart
 
-            const currentContext = [...this.context.cart]
             // const others = currentContext.filter(item => item.id !== this.props?.item.id)
 
-            const updatedX = currentContext.map(item => {
+            const updatedCart = currentContext.map(item => {
 
-                if (item.id === this.props?.item.id) {
+                if (item.index === this.props?.item.index) {
                     item.id = this.props?.item.id;
                     item.color = this.state.color;
                     item.quantity = this.state.quantity;
@@ -140,7 +137,7 @@ class CartItem extends Component {
                 return item;
 
             })
-            this.context.setCart(updatedX)
+            this.context.setCart(updatedCart)
 
         }
 
@@ -177,7 +174,7 @@ class CartItem extends Component {
         }
 
 
-        const savedAttributes = this.context.cart?.find(item => item.id === this.props?.item.id);
+        const savedAttributes = { color: this.props?.item.color, otherAttributes: this.props?.item.otherAttributes };
         const attributesLength = Object.keys(savedAttributes).length;
 
         console.log("render");

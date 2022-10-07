@@ -31,6 +31,12 @@ class Category extends Component {
             id
             name
             gallery
+            attributes {
+              name
+              items {
+                value
+              }
+            }
             prices {
                   currency {
                   label
@@ -44,12 +50,15 @@ class Category extends Component {
       })
       .then((result) => {
 
+        this.setState({ products: result.data.category.products })
+
+        // On currency change this data will be reloaded again. To prevent loop from componentDidUpdate, current & previous data is checked. If they are not the same then it means the currency is changed in context & new data is loaded. Only if new data is loaded then it is saved to the state. 
         const newData = result.data.category?.products.length
         const oldData = this.state.products?.length
 
-        if (newData !== oldData) {
-          this.setState({ products: result.data.category.products })
-        }
+        // if (newData !== oldData) {
+        //   this.setState({ products: result.data.category.products })
+        // }
       });
   }
 
@@ -57,9 +66,9 @@ class Category extends Component {
     this.loadData()
   }
 
-  componentDidUpdate() {
-    this.loadData()
-  }
+  // componentDidUpdate() {
+  //   this.loadData()
+  // }
 
   render() {
 
