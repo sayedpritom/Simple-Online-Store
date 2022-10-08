@@ -9,12 +9,17 @@ class Cart extends Component {
     render() {
         const { cart } = this.context;
 
+        const totalPrice = (this.context.cart.map(item => item.totalPrice)).reduce((accumulator, value) => accumulator + value, 0)
+
+        console.log(this.context.cart.map(item => item.totalPrice));
+
         return (
             <div>
                 <p className="cart-heading">Cart</p>
                 {
                     cart.map(item => <CartItem key={item.id} item={item} />)
                 }
+                <h1>{totalPrice}</h1>
             </div>
         );
     }

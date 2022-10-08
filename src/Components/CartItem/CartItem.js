@@ -111,7 +111,7 @@ class CartItem extends Component {
 
         // Set the attributes in context too
         const updateCartInContext = (name, value) => {
-            
+
             const currentContext = this.context.cart
 
             // const others = currentContext.filter(item => item.id !== this.props?.item.id)
@@ -174,7 +174,7 @@ class CartItem extends Component {
         }
 
 
-        const savedAttributes = { color: this.props?.item.color, otherAttributes: this.props?.item.otherAttributes };
+        const savedAttributes = { color: this.props?.item.color, otherAttributes: this.props?.item.otherAttributes, quantity: this.props?.item.quantity };
         const attributesLength = Object.keys(savedAttributes).length;
 
         console.log("render");
@@ -205,6 +205,32 @@ class CartItem extends Component {
             })
             // this.setState({initial: false})
         }
+
+        // get the current item
+        let currentItem = this.context.cart.find(item => item.index === this.props?.item.index);
+
+        // find it's total price
+        const totalPrice = this.state.quantity * this.state.price.amount;
+
+        // create a new item
+        const updatedItem = {...currentItem, totalPrice}
+
+        // replace the old item by the new one in a new array
+        const updatedCart = this.context.cart.map(item => {
+            if (item.index === this.props?.item.index) {
+                return updatedItem
+            } else {
+                return item
+            }
+        })
+
+        // if the old cart is not equals to the new cart then update the cart. This helps preventing infinite loop. 
+        if (JSON.stringify(this.context.cart) !== JSON.stringify(updatedCart)) {
+            this.context.setCart(updatedCart)
+        }
+
+
+
 
         return (
             <div className='cart-item' >

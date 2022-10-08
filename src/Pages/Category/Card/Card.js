@@ -17,20 +17,21 @@ class Card extends Component {
         const addToCart = id => {
 
             const color = (attributes.find(item => item.name === 'Color'))?.items[0].value
+            const quantity = 1;
+            const totalPrice = 0;
             const others = attributes.find(item => item.name !== 'Color');
 
             const name = others.name;
             const value = others.items[0].value
 
-            const otherAttributes = {name, value}
+            const otherAttributes = { name, value }
 
             const currentCartContext = this.context.cart;
             const index = currentCartContext.length + 1;
 
             const alreadyExists = currentCartContext.find(item => item.id === id);
 
-            if (!alreadyExists) this.context.setCart([{ id, color, otherAttributes, index }, ...this.context.cart])
-
+            if (!alreadyExists) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
         }
 
         const redirectToDescriptionPage = (e) => {

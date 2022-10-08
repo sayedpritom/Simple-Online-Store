@@ -102,7 +102,13 @@ class ProductDescription extends Component {
         this.loadData()
     }
     componentDidUpdate() {
-        // this.loadData()
+        // Only rerender if the currency is updated
+        const oldCurrency = this.state.price.label;
+        const newCurrency = this.context.currency;
+
+        if (oldCurrency !== newCurrency) {
+            this.loadData()
+        }
     }
 
     render() {
@@ -130,8 +136,9 @@ class ProductDescription extends Component {
         }
 
         const addToCart = id => {
-            debugger
             const color = this.state.color;
+            const quantity = 1;
+            const totalPrice = 0;
             const otherAttributes = this.state.otherAttributes;
 
             const currentCartContext = this.context.cart;
@@ -140,16 +147,16 @@ class ProductDescription extends Component {
             // removing the index by taking other properties(delete item.index removed index from context somehow)
             const itemsMatchedById = currentCartContext.map(item => {
                 if (item.id === id) {
-                    return {id: item.id, color: item.color, otherAttributes: item.otherAttributes}
+                    return { id: item.id, color: item.color, quantity, totalPrice, otherAttributes: item.otherAttributes }
                 }
             });
 
-            const numberOfMatchesByAttributes = itemsMatchedById.map(item => JSON.stringify(item) === JSON.stringify({ id, color, otherAttributes }));
+            const numberOfMatchesByAttributes = itemsMatchedById.map(item => JSON.stringify(item) === JSON.stringify({ id, color, quantity, totalPrice, otherAttributes }));
 
             const isFound = numberOfMatchesByAttributes.find(item => item === true) ? "found" : "notFound"
 
             if (isFound === "notFound") {
-                this.context.setCart([{ id, color, otherAttributes, index }, ...this.context.cart])
+                this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
             }
         }
 
