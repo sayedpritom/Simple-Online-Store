@@ -7,7 +7,6 @@ import './CartItem.css'
 class CartItem extends Component {
     static contextType = UserContext;
 
-
     constructor(props) {
         super(props)
         this.state = {
@@ -90,6 +89,9 @@ class CartItem extends Component {
         const oldCurrency = this.state.price.label;
         const newCurrency = this.context.currency;
 
+        const oldq = this.state.quantity;
+        // const newq = this.context 
+
         if (oldCurrency !== newCurrency) {
             this.loadData()
         }
@@ -97,7 +99,18 @@ class CartItem extends Component {
 
 
     render() {
+
         const { id, brand, name, prices, gallery, inStock, description, category, attributes, } = this.state.product;
+
+
+        // get the current item
+        const currentItem = this.context.cart.find(item => item.index === this.props?.item.index);
+        const { quantity, color } = currentItem;
+        const selectedOthersAttributes = currentItem.otherAttributes;
+        console.log(selectedOthersAttributes);
+
+
+        const miniCart = this.context.miniCart;
 
         // Get the attributes 
         const colorAttribute = attributes?.find(attribute => attribute.name === "Color");
@@ -161,16 +174,15 @@ class CartItem extends Component {
         }
 
         const changeQuantity = (input) => {
-            const currentQuantity = this.state.quantity;
 
-            let quantity = 0
+            let newQuantity = 0
 
-            if (input === "increase") quantity = currentQuantity + 1
+            if (input === "increase") newQuantity = quantity + 1
 
-            if (input === "decrease" && currentQuantity > 0) quantity = currentQuantity - 1
+            if (input === "decrease" && quantity > 0) newQuantity = quantity - 1
 
-            this.setState({ quantity: quantity })
-            updateCartInContext("quantity", quantity)
+            this.setState({ quantity: newQuantity })
+            updateCartInContext("quantity", newQuantity)
         }
 
 
@@ -206,47 +218,52 @@ class CartItem extends Component {
             // this.setState({initial: false})
         }
 
-        // get the current item
-        let currentItem = this.context.cart.find(item => item.index === this.props?.item.index);
+
+
+
+
+
+
+        // the problem is here, calculating the total price of each items in context & resetting them with the total price. Instead I can create total price with initial value & update that value in increase, decrease handlers
 
         // find it's total price
-        const totalPrice = this.state.quantity * this.state.price.amount;
+        // const totalPrice = this.state.quantity * this.state.price.amount;
 
-        // create a new item
-        const updatedItem = {...currentItem, totalPrice}
+        // // create a new item
+        // const updatedItem = { ...currentItem, totalPrice }
 
-        // replace the old item by the new one in a new array
-        const updatedCart = this.context.cart.map(item => {
-            if (item.index === this.props?.item.index) {
-                return updatedItem
-            } else {
-                return item
-            }
-        })
+        // // replace the old item by the new one in a new array
+        // const updatedCart = this.context.cart.map(item => {
+        //     if (item.index === this.props?.item.index) {
+        //         return updatedItem
+        //     } else {
+        //         return item
+        //     }
+        // })
 
-        // if the old cart is not equals to the new cart then update the cart. This helps preventing infinite loop. 
-        if (JSON.stringify(this.context.cart) !== JSON.stringify(updatedCart)) {
-            this.context.setCart(updatedCart)
-        }
+        // // if the old cart is not equals to the new cart then update the cart. This helps preventing infinite loop. 
+        // if (JSON.stringify(this.context.cart) !== JSON.stringify(updatedCart)) {
+        //     // this.context.setCart(updatedCart)
+        // }
 
 
 
 
         return (
             <div className='cart-item' >
-                <div className='product-info'>
-                    <h2 className='product-brand product-brand-in-cart'>{brand}</h2>
-                    <h2 className='product-name'>{name}</h2>
+                <div className={`product-info ${miniCart && 'product-info-mini'}`}>
+                    <h2 className={`product-brand product-brand-in-cart ${miniCart && 'product-brand-in-cart-mini'}`}>{brand}</h2>
+                    <h2 className={`product-name ${miniCart && 'product-name-mini'}`}>{name}</h2>
                     {/* Price */}
                     <div className="product-price">
-                        <p className='price'>Price:</p>
-                        <p className='amount'>{this.state.price.symbol}{this.state.price.amount}</p>
+                        <p className={`price ${miniCart && 'price-mini'}`}>Price:</p>
+                        <p className={`amount ${miniCart && 'amount-mini'}`}>{this.state.price.symbol}{this.state.price.amount}</p>
                     </div>
                     {/* Check for any attribute that is not about color if there is any then show it in it's style */}
                     {otherAttributes &&
                         <div>
-                            <p className='others'>{otherAttributes.name}</p>
-                            <div className='other-attributes'>
+                            <p className={`others ${miniCart && 'others-mini'}`}>{otherAttributes.name}</p>
+                            <div className={`other-attributes ${miniCart && 'other-attributes-mini'}`}>
                                 {otherAttributes.items.map(item => <button key={item.value} onClick={() => pickOtherAttributes(otherAttributes.name, item.value)} className={`${this.state.otherAttributes.value === item.value && 'selected-other-attributes'}`}>{item.value}</button>)}
                             </div>
                         </div>
@@ -254,23 +271,23 @@ class CartItem extends Component {
                     {/* Check if the color attribute exists, if so then show in the colors style*/}
                     {colorAttribute &&
                         <div>
-                            <p className='color'>{colorAttribute.name}:</p>
-                            <div className='color-attributes'>
-                                {colorAttribute.items.map(item => <button className={`${item.value === this.state.color && 'selected-color-attribute'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
+                            <p className={`color ${miniCart && 'others-mini'}`}>{colorAttribute.name}:</p>
+                            <div className={`color-attributes ${miniCart && 'color-attributes-mini'}`}>
+                                {colorAttribute.items.map(item => <button className={`${item.value === this.state.color && 'selected-color-attribute'} ${item.value === color && miniCart && 'selected-color-attribute-mini'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
                             </div>
                         </div>
                     }
                 </div>
                 <div className="quantity-and-preview-image">
-                    <div className="item-quantity">
+                    <div className={`item-quantity ${miniCart && 'item-quantity-mini'}`}>
                         <button onClick={() => changeQuantity("increase")}>+</button>
-                        <p>{this.state.quantity}</p>
+                        <p>{quantity}</p>
                         <button onClick={() => changeQuantity("decrease")}>-</button>
                     </div>
-                    <div className='cart-item-image'>
+                    <div className={`cart-item-image ${miniCart && 'cart-item-image-mini'}`}>
                         <img src={gallery?.[this.state.preview]} alt="" />
                         {/* {console.log(gallery?.[this.state.preview])} */}
-                        <div className='next-previous-buttons'>
+                        <div className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
                             <button onClick={() => previous(this.state.preview)}> &lt; </button>
                             <button onClick={() => next(this.state.preview)}> &gt; </button>
                         </div>

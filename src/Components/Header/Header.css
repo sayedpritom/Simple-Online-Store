@@ -90,3 +90,27 @@
     top: -20px;
     right: -1px;
 }
+
+.cart-icon {
+    position: relative
+}
+
+.cart-holder {
+    width: 325px;
+    position: absolute;
+    top: 40px;
+    background-color: white;
+    right: 0;
+    z-index: 100;
+    padding: 10px;
+}
+
+.cart-dark-bg {
+    height: 100vh;
+    width: 100vw;
+    top: 67px;
+    background-color: rgba(0, 0, 0, 0.131);
+    position: absolute;
+    z-index: 50;
+    right: 0;
+}

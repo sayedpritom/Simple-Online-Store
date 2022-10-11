@@ -11,7 +11,8 @@ class Category extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      products: []
+      products: [],
+      currency: "$"
     }
   }
 
@@ -50,7 +51,7 @@ class Category extends Component {
       })
       .then((result) => {
 
-        this.setState({ products: result.data.category.products })
+        this.setState({ products: result.data.category.products, currency: this.context.symbol })
 
         // On currency change this data will be reloaded again. To prevent loop from componentDidUpdate, current & previous data is checked. If they are not the same then it means the currency is changed in context & new data is loaded. Only if new data is loaded then it is saved to the state. 
         const newData = result.data.category?.products.length
@@ -59,6 +60,7 @@ class Category extends Component {
         // if (newData !== oldData) {
         //   this.setState({ products: result.data.category.products })
         // }
+        
       });
   }
 
@@ -66,12 +68,17 @@ class Category extends Component {
     this.loadData()
   }
 
-  // componentDidUpdate() {
-  //   this.loadData()
-  // }
+  componentDidUpdate() {
+
+    // only update if the currency has been changed
+    const oldCurrency = this.state.currency
+    const newCurrency = this.context.symbol
+
+    if(oldCurrency !== newCurrency) this.loadData()
+    
+  }
 
   render() {
-
     return (
       <div>
         <h1 className='category-name'>{this.context.category}</h1>

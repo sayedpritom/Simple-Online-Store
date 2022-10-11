@@ -13,6 +13,7 @@ export class UserProvider extends Component {
             symbol: '$',
             cart: [],
             initial: true,
+            miniCart: false,
         }
 
     }
@@ -41,9 +42,15 @@ export class UserProvider extends Component {
          })
     }
 
+    setMiniCart = () => {
+        this.setState({ 
+            miniCart: !this.state.miniCart,
+         })
+    }
+
     render() {
-        const { currency, category, symbol, cart } = this.state;
-        const { setCurrency, setCategory, setCart } = this;
+        const { currency, category, symbol, cart, miniCart } = this.state;
+        const { setCurrency, setCategory, setCart, setMiniCart } = this;
 
         // get & parse data from session storage
         const currentSessionStorage = JSON.parse(sessionStorage.getItem("currentState"));
@@ -77,9 +84,11 @@ export class UserProvider extends Component {
                 symbol,
                 category,
                 cart,
+                miniCart,
                 setCart,
                 setCurrency,
-                setCategory
+                setCategory,
+                setMiniCart,
             }}>
                 {this.props.children}
             </UserContext.Provider>

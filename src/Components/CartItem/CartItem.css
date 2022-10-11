@@ -69,3 +69,89 @@
     margin-right: 10px;
     border: none;
 }
+
+
+
+/* Styles for minicart */
+
+.product-info-mini {
+    width: 180px!important;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 0;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.product-brand-in-cart-mini, .product-name-mini {
+    font-size: 16px !important;
+    font-weight: 300;
+    line-height: 160%;
+    margin: 0 !important;
+
+}
+
+.price-mini {
+    display: none;
+}
+
+.amount-mini {
+    margin: 0;
+    font-weight: 500!important;
+    font-size: 16px !important;
+    margin: 0 !important;
+}
+
+.others-mini {
+    font-family: 'Raleway' !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+}
+
+.other-attributes-mini>button {
+    width: auto !important;
+    height: 34px !important;
+    font-weight: 400;
+    font-size: 14px !important;
+}
+
+.color-attributes-mini > button{
+    width: 16px!important;
+    height: 16px!important;
+}
+
+.color-attributes-mini>button:hover::before, .selected-color-attribute-mini::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px!important;
+    height: 20px!important;
+    background: none;
+    border: 0.5px solid #5ECE7B;
+}
+
+.item-quantity-mini>button {
+    height: 24px;
+    width: 24px;
+    font-size: 28px;
+}
+
+.quantity-and-preview-image-mini {
+    display: flex;
+    align-items: center;
+}
+
+
+.cart-item-image-mini {
+    height: 190px;
+    width: 120px;
+    position: relative;
+}
+
+.next-previous-buttons-mini {
+    display: none;
+}

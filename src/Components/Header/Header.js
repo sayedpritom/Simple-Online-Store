@@ -9,6 +9,10 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
 
 
+import Cart from '../Cart/Cart.js';
+import navigator from '../HOC/navigator';
+
+
 class Header extends Component {
 
     static contextType = UserContext;
@@ -17,14 +21,9 @@ class Header extends Component {
         super(props)
 
         this.state = {
-            currencies: []
-        }
-        this.state = {
-            categories: []
-        }
-
-        this.state = {
-            currencyDropDown: false
+            currencies: [],
+            categories: [],
+            currencyDropDown: false,
         }
 
         // This is for keeping the location reference of the closing btn  & closing the currency dropdown when clicked outside. 
@@ -76,12 +75,20 @@ class Header extends Component {
 
     render() {
         // Get all the data from the global context api
-        const { currency, symbol, category, cart, setCurrency, setCategory } = this.context;
+        const { currency, symbol, category, cart, miniCart, setCurrency, setCategory, setMiniCart } = this.context;
+
+        // Get total added item quantities 
+        const cartQuantity = (cart.map(item => item.quantity)).reduce((accumulator, value) => accumulator + value, 0);
 
         // Change the currency in context api & set dropdown state to false
         const changeCurrency = (currency, symbol) => {
             this.setState({ currencyDropDown: false })
             setCurrency(currency, symbol)
+        }
+
+        const toggleMiniCart = () => {
+            setMiniCart()
+            this.props.navigate('/cart')
         }
 
         return (
@@ -118,16 +125,25 @@ class Header extends Component {
                     </div>
 
                     {/* Cart Button */}
-                    <Link to="/cart">
-                        <button className='cartBtn'>
+                    <div className='cart-icon'>
+                        <button onClick={setMiniCart} className='cartBtn'>
                             <img src={cartIcon} alt="" />
-                            <p className='cart-length'>{cart.length}</p>
+                            <p className='cart-length'>{cartQuantity}</p>
                         </button>
-                    </Link>
+                        <div style={{ display: `${!miniCart ? 'none' : 'block'}` }}>
+                            <div className='cart-holder'>
+                                <Cart />
+                                <h3>Total: 0</h3>
+                                <button onClick={toggleMiniCart} className='view-bag-btn'>View Bag</button>
+                                <button className='check-out-btn'>Check Out</button>
+                            </div>
+                            <div className='cart-dark-bg'></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-export default Header;
+export default navigator(Header);

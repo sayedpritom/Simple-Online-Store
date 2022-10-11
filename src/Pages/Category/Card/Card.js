@@ -44,10 +44,8 @@ class Card extends Component {
                     <img className='card-image' src={gallery[0]} alt="" />
                     <button ref={this.cartButtonRef} onClick={() => addToCart(id)} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
                 </div>
-                <Link className='product-link' to={`pdp/${id}`}>
-                    <p className='product-names'>{name}</p>
-                </Link>
-                <p className='product-price'>{this.context.symbol}{price.amount}</p>
+                <p className='product-names'>{name}</p>
+                <p className='product-price'>{this.context.symbol}{price.amount}</p> 
             </div >
         );
     }
