@@ -75,7 +75,7 @@
 /* Styles for minicart */
 
 .product-info-mini {
-    width: 180px!important;
+    width: 180px !important;
 }
 
 .cart-item {
@@ -99,7 +99,7 @@
 
 .amount-mini {
     margin: 0;
-    font-weight: 500!important;
+    font-weight: 500 !important;
     font-size: 16px !important;
     margin: 0 !important;
 }
@@ -110,6 +110,13 @@
     font-size: 14px !important;
 }
 
+.quantity-mini {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+}
+
 .other-attributes-mini>button {
     width: auto !important;
     height: 34px !important;
@@ -117,9 +124,9 @@
     font-size: 14px !important;
 }
 
-.color-attributes-mini > button{
-    width: 16px!important;
-    height: 16px!important;
+.color-attributes-mini>button {
+    width: 16px !important;
+    height: 16px !important;
 }
 
 .color-attributes-mini>button:hover::before, .selected-color-attribute-mini::before {
@@ -128,8 +135,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 20px!important;
-    height: 20px!important;
+    width: 20px !important;
+    height: 20px !important;
     background: none;
     border: 0.5px solid #5ECE7B;
 }

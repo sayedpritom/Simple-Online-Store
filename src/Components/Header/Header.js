@@ -24,16 +24,22 @@ class Header extends Component {
             currencies: [],
             categories: [],
             currencyDropDown: false,
+            miniCartOpen: false,
         }
 
-        // This is for keeping the location reference of the closing btn  & closing the currency dropdown when clicked outside. 
-        this.wrapperRef = React.createRef();
-        this.handleClickOutside = this.handleClickOutside.bind(this);
+        // This is for keeping the location reference of the closing btn & closing the currency dropdown, cart overlay when clicked outside. 
+
+        this.wrapperRefCurrency = React.createRef();
+        this.handleClickOutsideCurrency = this.handleClickOutsideCurrency.bind(this);
+
+        this.wrapperRefCart = React.createRef();
+        this.handleClickOutsideCart = this.handleClickOutsideCart.bind(this);
     }
 
 
     componentDidMount() {
-        document.addEventListener("mousedown", this.handleClickOutside);
+        document.addEventListener("mousedown", this.handleClickOutsideCurrency);
+        document.addEventListener("mousedown", this.handleClickOutsideCart);
 
         // Load & set the categories & currencies
 
@@ -63,13 +69,21 @@ class Header extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener("mousedown", this.handleClickOutside);
+        document.removeEventListener("mousedown", this.handleClickOutsideCurrency);
+        document.removeEventListener("mousedown", this.handleClickOutsideCart);
     }
 
     // Hide the currency dropdown if clicked outside
-    handleClickOutside(event) {
-        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+    handleClickOutsideCurrency(event) {
+        if (this.wrapperRefCurrency && !this.wrapperRefCurrency.current.contains(event.target)) {
             this.setState({ currencyDropDown: false })
+        }
+    }
+
+    // Hide the cart overlay if clicked outside
+    handleClickOutsideCart(event) {
+        if (this.wrapperRefCart && !this.wrapperRefCart.current.contains(event.target)) {
+            this.setState({ miniCartOpen: false })
         }
     }
 
@@ -86,8 +100,8 @@ class Header extends Component {
             setCurrency(currency, symbol)
         }
 
-        const toggleMiniCart = () => {
-            setMiniCart()
+        const viewBag = () => {
+            this.setState({ miniCartOpen: !this.state.miniCartOpen })
             this.props.navigate('/cart')
         }
 
@@ -108,7 +122,7 @@ class Header extends Component {
                 {/* Currency Dropdown & cart  */}
                 <div className='CartAndCurrency'>
 
-                    <div className='currencyDropDown' ref={this.wrapperRef}>
+                    <div className='currencyDropDown' ref={this.wrapperRefCurrency}>
                         {/* Currency dropdown button */}
                         <button className='currencyDropDownBtn' onClick={() => this.setState({ currencyDropDown: !this.state.currencyDropDown })}>
                             {symbol}
@@ -125,21 +139,20 @@ class Header extends Component {
                     </div>
 
                     {/* Cart Button */}
-                    <div className='cart-icon'>
-                        <button onClick={setMiniCart} className='cartBtn'>
+                    <div className='cart-icon' ref={this.wrapperRefCart}>
+                        <button onClick={() => this.setState({ miniCartOpen: !this.state.miniCartOpen })} className='cartBtn'>
                             <img src={cartIcon} alt="" />
                             <p className='cart-length'>{cartQuantity}</p>
                         </button>
-                        <div style={{ display: `${!miniCart ? 'none' : 'block'}` }}>
+                        <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }}>
                             <div className='cart-holder'>
-                                <Cart />
-                                <h3>Total: 0</h3>
-                                <button onClick={toggleMiniCart} className='view-bag-btn'>View Bag</button>
+                                <Cart miniCart={true} />
+                                <button onClick={() => viewBag()} className='view-bag-btn'>View Bag</button>
                                 <button className='check-out-btn'>Check Out</button>
                             </div>
-                            <div className='cart-dark-bg'></div>
                         </div>
                     </div>
+                    <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }} className='cart-dark-bg'></div>
                 </div>
             </div>
         );

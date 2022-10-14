@@ -12,6 +12,7 @@ class Category extends Component {
     super(props)
     this.state = {
       products: [],
+      category: "all",
       currency: "$"
     }
   }
@@ -36,7 +37,7 @@ class Category extends Component {
               name
               items {
                 value
-              }
+              } 
             }
             prices {
                   currency {
@@ -51,7 +52,7 @@ class Category extends Component {
       })
       .then((result) => {
 
-        this.setState({ products: result.data.category.products, currency: this.context.symbol })
+        this.setState({ products: result.data.category.products, currency: this.context.symbol, category: this.context.category })
 
         // On currency change this data will be reloaded again. To prevent loop from componentDidUpdate, current & previous data is checked. If they are not the same then it means the currency is changed in context & new data is loaded. Only if new data is loaded then it is saved to the state. 
         const newData = result.data.category?.products.length
@@ -60,7 +61,7 @@ class Category extends Component {
         // if (newData !== oldData) {
         //   this.setState({ products: result.data.category.products })
         // }
-        
+
       });
   }
 
@@ -70,25 +71,26 @@ class Category extends Component {
 
   componentDidUpdate() {
 
-    // only update if the currency has been changed
+    // only update if the currency or category has been changed
     const oldCurrency = this.state.currency
     const newCurrency = this.context.symbol
 
-    if(oldCurrency !== newCurrency) this.loadData()
-    
+    const oldCategory = this.state.category
+    const newCategory = this.context.category
+
+    if (oldCurrency !== newCurrency || oldCategory !== newCategory) this.loadData()
+
   }
 
   render() {
     return (
       <div>
-        <h1 className='category-name'>{this.context.category}</h1>
-
+        <h1 className='category-name'>{this.context.category.charAt(0).toUpperCase() + this.context.category.slice(1)}</h1>
         <div className='products'>
           {this.state.products.map(product => {
             return <Card product={product} key={product.id} />
           })}
         </div>
-
       </div>
     );
   }

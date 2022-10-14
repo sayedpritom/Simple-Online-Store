@@ -11,3 +11,17 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 45px 65px;
 }
+
+/* Responsive styles */
+
+@media only screen and (max-width: 950px) {
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .products {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

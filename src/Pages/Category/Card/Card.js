@@ -11,14 +11,16 @@ class Card extends Component {
     static contextType = UserContext;
 
     render() {
+
         const { id, name, gallery, prices, attributes } = this.props.product;
         let price = prices.find(price => price.currency.label === this.context.currency && price.currency.label)
 
         const addToCart = id => {
 
-            const color = (attributes.find(item => item.name === 'Color'))?.items[0].value
+            const findColor = (attributes.find(item => item.name === 'Color'))?.items[0].value;
+            const color = findColor ? findColor : "";
             const quantity = 1;
-            const totalPrice = 0;
+            const totalPrice = price.amount;
             const others = attributes.find(item => item.name !== 'Color');
 
             const name = others.name;
@@ -29,7 +31,22 @@ class Card extends Component {
             const currentCartContext = this.context.cart;
             const index = currentCartContext.length + 1;
 
-            const alreadyExists = currentCartContext.find(item => item.id === id);
+
+            const newCart = { id, color, quantity, totalPrice, otherAttributes }
+
+            const alreadyExists = (currentCartContext.filter(item => item.id === id)).find(item => {
+
+                const { id, color, quantity, totalPrice, otherAttributes } = item;
+                const itemWithoutIndex = { id, color, quantity, totalPrice, otherAttributes }
+
+                if(JSON.stringify(itemWithoutIndex) === JSON.stringify(newCart)) {
+                    return item
+                } else {
+                    return false
+                }
+            })
+
+            console.log(alreadyExists);
 
             if (!alreadyExists) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
         }
@@ -45,7 +62,7 @@ class Card extends Component {
                     <button ref={this.cartButtonRef} onClick={() => addToCart(id)} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
                 </div>
                 <p className='product-names'>{name}</p>
-                <p className='product-price'>{this.context.symbol}{price.amount}</p> 
+                <p className='product-price'>{this.context.symbol}{price.amount}</p>
             </div >
         );
     }

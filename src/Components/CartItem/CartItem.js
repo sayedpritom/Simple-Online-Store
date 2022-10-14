@@ -89,9 +89,6 @@ class CartItem extends Component {
         const oldCurrency = this.state.price.label;
         const newCurrency = this.context.currency;
 
-        const oldq = this.state.quantity;
-        // const newq = this.context 
-
         if (oldCurrency !== newCurrency) {
             this.loadData()
         }
@@ -107,10 +104,9 @@ class CartItem extends Component {
         const currentItem = this.context.cart.find(item => item.index === this.props?.item.index);
         const { quantity, color } = currentItem;
         const selectedOthersAttributes = currentItem.otherAttributes;
-        console.log(selectedOthersAttributes);
 
 
-        const miniCart = this.context.miniCart;
+        const miniCart = this.props.miniCart;
 
         // Get the attributes 
         const colorAttribute = attributes?.find(attribute => attribute.name === "Color");
@@ -127,30 +123,38 @@ class CartItem extends Component {
 
             const currentContext = this.context.cart
 
-            // const others = currentContext.filter(item => item.id !== this.props?.item.id)
+            
+            if (name === 'deleteItem') {
+                const others = currentContext.filter(item => item.index !== this.props?.item.index)
+                this.context.setCart(others)
 
-            const updatedCart = currentContext.map(item => {
+            } else {
+                const updatedCart = currentContext.map(item => {
 
-                if (item.index === this.props?.item.index) {
-                    item.id = this.props?.item.id;
-                    item.color = this.state.color;
-                    item.quantity = this.state.quantity;
-                    item.otherAttributes = this.state.otherAttributes
+                    if (item.index === this.props?.item.index) {
+                        item.id = this.props?.item.id;
+                        item.index = this.props?.item.index;
+                        item.color = this.state.color;
+                        item.quantity = this.state.quantity;
+                        item.otherAttributes = this.state.otherAttributes
 
 
-                    if (name === "color") item.color = value;
+                        if (name === "color") item.color = value;
 
-                    if (name === "quantity") item.quantity = value;
+                        if (name === "quantity") item.quantity = value;
 
-                    if (name === "otherAttributes") item.otherAttributes = value;
+                        if (name === "otherAttributes") item.otherAttributes = value;
 
-                    // return item
-                }
+                        if (name === "totalPrice") item.totalPrice = value;
 
-                return item;
+                        // return item
+                    }
 
-            })
-            this.context.setCart(updatedCart)
+                    return item;
+
+                })
+                this.context.setCart(updatedCart)
+            }
 
         }
 
@@ -176,20 +180,26 @@ class CartItem extends Component {
         const changeQuantity = (input) => {
 
             let newQuantity = 0
+            let totalPrice;
 
             if (input === "increase") newQuantity = quantity + 1
 
             if (input === "decrease" && quantity > 0) newQuantity = quantity - 1
 
+            totalPrice = newQuantity * this.state.price.amount
+
             this.setState({ quantity: newQuantity })
+
+            updateCartInContext("totalPrice", totalPrice)
             updateCartInContext("quantity", newQuantity)
+
+            // Remove the item from cart if it's quantity becomes 0
+            newQuantity < 1 && updateCartInContext('deleteItem', 0)
         }
 
 
         const savedAttributes = { color: this.props?.item.color, otherAttributes: this.props?.item.otherAttributes, quantity: this.props?.item.quantity };
         const attributesLength = Object.keys(savedAttributes).length;
-
-        console.log("render");
 
         // if length is more than 1 then it means it has not only the id but other properties too
         // to prevent infinite loop the initial state is used.
@@ -198,14 +208,11 @@ class CartItem extends Component {
             savedAttributes.otherAttributes && this.setState({ otherAttributes: savedAttributes.otherAttributes })
             savedAttributes.quantity && this.setState({ quantity: savedAttributes.quantity })
             this.setState({ initial: false })
-            console.log("jj");
         }
         else if (this.state.initial) {
-            console.log("kk");
             // find out color, attributes & set them
             const colors = this.state.product.attributes?.find(attribute => attribute.name === "Color")
             const otherAttributes = this.state.product.attributes?.find(attribute => attribute.name !== "Color")
-            console.log(colors, this.state.product);
             colors && this.setState({ color: colors.items[0].value })
 
             otherAttributes && this.setState({
@@ -227,24 +234,24 @@ class CartItem extends Component {
         // the problem is here, calculating the total price of each items in context & resetting them with the total price. Instead I can create total price with initial value & update that value in increase, decrease handlers
 
         // find it's total price
-        // const totalPrice = this.state.quantity * this.state.price.amount;
+        const totalPrice = this.state.quantity * this.state.price.amount;
 
-        // // create a new item
-        // const updatedItem = { ...currentItem, totalPrice }
+        // create a new item
+        const updatedItem = { ...currentItem, totalPrice }
 
-        // // replace the old item by the new one in a new array
-        // const updatedCart = this.context.cart.map(item => {
-        //     if (item.index === this.props?.item.index) {
-        //         return updatedItem
-        //     } else {
-        //         return item
-        //     }
-        // })
+        // replace the old item by the new one in a new array
+        const updatedCart = this.context.cart.map(item => {
+            if (item.index === this.props?.item.index) {
+                return updatedItem
+            } else {
+                return item
+            }
+        })
 
-        // // if the old cart is not equals to the new cart then update the cart. This helps preventing infinite loop. 
-        // if (JSON.stringify(this.context.cart) !== JSON.stringify(updatedCart)) {
-        //     // this.context.setCart(updatedCart)
-        // }
+        // if the old cart is not equals to the new cart then update the cart. This helps preventing infinite loop. 
+        if (JSON.stringify(this.context.cart) !== JSON.stringify(updatedCart)) {
+            // this.context.setCart(updatedCart)
+        }
 
 
 
@@ -264,7 +271,7 @@ class CartItem extends Component {
                         <div>
                             <p className={`others ${miniCart && 'others-mini'}`}>{otherAttributes.name}</p>
                             <div className={`other-attributes ${miniCart && 'other-attributes-mini'}`}>
-                                {otherAttributes.items.map(item => <button key={item.value} onClick={() => pickOtherAttributes(otherAttributes.name, item.value)} className={`${this.state.otherAttributes.value === item.value && 'selected-other-attributes'}`}>{item.value}</button>)}
+                                {otherAttributes.items.map(item => <button key={item.value} onClick={() => pickOtherAttributes(otherAttributes.name, item.value)} className={`${selectedOthersAttributes.value === item.value && 'selected-other-attributes'}`}>{item.value}</button>)}
                             </div>
                         </div>
                     }
@@ -273,7 +280,7 @@ class CartItem extends Component {
                         <div>
                             <p className={`color ${miniCart && 'others-mini'}`}>{colorAttribute.name}:</p>
                             <div className={`color-attributes ${miniCart && 'color-attributes-mini'}`}>
-                                {colorAttribute.items.map(item => <button className={`${item.value === this.state.color && 'selected-color-attribute'} ${item.value === color && miniCart && 'selected-color-attribute-mini'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
+                                {colorAttribute.items.map(item => <button className={`${item.value === color && 'selected-color-attribute'} ${item.value === color && miniCart && 'selected-color-attribute-mini'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
                             </div>
                         </div>
                     }
@@ -281,12 +288,11 @@ class CartItem extends Component {
                 <div className="quantity-and-preview-image">
                     <div className={`item-quantity ${miniCart && 'item-quantity-mini'}`}>
                         <button onClick={() => changeQuantity("increase")}>+</button>
-                        <p>{quantity}</p>
+                        <p className={`${miniCart && 'quantity-mini'}`}>{quantity}</p>
                         <button onClick={() => changeQuantity("decrease")}>-</button>
                     </div>
                     <div className={`cart-item-image ${miniCart && 'cart-item-image-mini'}`}>
                         <img src={gallery?.[this.state.preview]} alt="" />
-                        {/* {console.log(gallery?.[this.state.preview])} */}
                         <div className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
                             <button onClick={() => previous(this.state.preview)}> &lt; </button>
                             <button onClick={() => next(this.state.preview)}> &gt; </button>

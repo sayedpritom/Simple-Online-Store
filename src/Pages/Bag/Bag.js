@@ -10,7 +10,7 @@ class Bag extends Component {
  
         return (
             <div> 
-                <Cart></Cart>
+                <Cart miniCart={false}></Cart>
             </div>
         );
 
