@@ -131,11 +131,12 @@ class CartItem extends Component {
             } else {
                 const updatedCart = currentContext.map(item => {
 
+                    debugger
                     if (item.index === this.props?.item.index) {
                         item.id = this.props?.item.id;
                         item.index = this.props?.item.index;
                         item.color = this.state.color;
-                        item.quantity = this.state.quantity;
+                        item.quantity = quantity;
                         item.otherAttributes = this.state.otherAttributes
 
 
@@ -187,8 +188,6 @@ class CartItem extends Component {
             if (input === "decrease" && quantity > 0) newQuantity = quantity - 1
 
             totalPrice = newQuantity * this.state.price.amount
-
-            this.setState({ quantity: newQuantity })
 
             updateCartInContext("totalPrice", totalPrice)
             updateCartInContext("quantity", newQuantity)
@@ -293,7 +292,7 @@ class CartItem extends Component {
                     </div>
                     <div className={`cart-item-image ${miniCart && 'cart-item-image-mini'}`}>
                         <img src={gallery?.[this.state.preview]} alt="" />
-                        <div className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
+                        <div style={{display: `${gallery?.length < 2 ? 'none' : 'block'}`}} className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
                             <button onClick={() => previous(this.state.preview)}> &lt; </button>
                             <button onClick={() => next(this.state.preview)}> &gt; </button>
                         </div>
