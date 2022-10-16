@@ -61,32 +61,35 @@ class Card extends Component {
             // if (addNewItem) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
 
 
-            const operation = currentCartContext.map(item => {
-                const { id, color, quantity, totalPrice, otherAttributes, index } = item
-                const newQuantity = quantity + 1
-                const newTotalPrice = newQuantity * price.amount
+            // const operation = currentCartContext.map(item => {
+            //     const { id, color, quantity, totalPrice, otherAttributes, index } = item
+            //     const newQuantity = quantity + 1
+            //     const newTotalPrice = newQuantity * price.amount
 
-                let newItem = { id, color, quantity, totalPrice, otherAttributes, index }
+            //     let newItem = { id, color, quantity, totalPrice, otherAttributes, index }
 
-                console.log(JSON.stringify({ id, color, otherAttributes }), JSON.stringify(newCart));
+            //     console.log(JSON.stringify({ id, color, otherAttributes }), JSON.stringify(newCart));
 
-                if (JSON.stringify({ id, color, otherAttributes }) === JSON.stringify(newCart)) {
-                    return newItem = { id, color, quantity: newQuantity, totalPrice: newTotalPrice, otherAttributes, index }
-                }
-                return newItem
-            })
+            //     if (JSON.stringify({ id, color, otherAttributes }) === JSON.stringify(newCart)) {
+            //         return newItem = { id, color, quantity: newQuantity, totalPrice: newTotalPrice, otherAttributes, index }
+            //     }
+            //     return newItem
+            // })
 
-            // if (operation === undefined) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
-            // this.context.setCart()
-            if (operation.find(item => item.id === id)) {
-                this.context.setCart(operation)
-            } else if (operation.find(item => item.id === id)) {
-                
+            // // if (operation === undefined) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
+            // // this.context.setCart()
+            // if (operation.find(item => item.id === id)) {
+            //     this.context.setCart(operation)
+            // } else if (operation.find(item => item.id === id)) {
 
-            } else {
-                this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...operation])
-            }
-            console.log(operation)
+
+            // } else {
+            //     this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...operation])
+            // }
+            // console.log(operation)
+
+            this.context.setCart({ id, color, quantity, totalPrice, otherAttributes, index })
+
             // operation.quantity++
 
 

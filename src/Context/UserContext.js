@@ -20,37 +20,88 @@ export class UserProvider extends Component {
 
 
     setCurrency = (currency, symbol) => {
-        this.setState({ 
+        this.setState({
             currency: currency,
             symbol: symbol,
             initial: false
 
-         })
+        })
     }
 
     setCategory = category => {
-        this.setState({ 
+        this.setState({
             category: category,
             initial: false
-         })
+        })
     }
 
     setCart = cart => {
-        this.setState({ 
+        const oldCart = this.state.cart;
+
+        let duplicates = []
+        let amount = []
+
+        oldCart?.map(item => {
+            if ((JSON.stringify({ id: item.id, color: item.color, otherAttributes: item.otherAttributes }) === JSON.stringify({ id: cart.id, color: cart.color, otherAttributes: cart.otherAttributes }))) {
+                duplicates.push(item)
+                amount.push(item?.quantity)
+            }
+        })
+
+
+        if (duplicates.length === 0) {
+            this.setState({
+                cart: [cart, ...oldCart],
+                initial: false
+            })
+        } else {
+            let solution = oldCart.find(item => {
+                if (JSON.stringify({ id: item.id, color: item.color, otherAttributes: item.otherAttributes }) === JSON.stringify({ id: cart.id, color: cart.color, otherAttributes: cart.otherAttributes })) {
+                    item.quantity = item.quantity + 1;
+                    return item
+                }
+            })
+            let rest = oldCart.filter(item => {
+                if (JSON.stringify(solution) !== JSON.stringify(item)) {
+                    return item
+                }
+            })
+            this.setState({
+                cart: [solution, ...rest],
+                initial: false
+            })
+        }
+
+    }
+
+    updateCart = (cart, item) => {
+
+        // // 
+        // const oldCart = this.state.cart;
+
+        // const duplicate = oldCart?.map(old => {
+        //     if ((JSON.stringify({ id: old.id, color: old.color, otherAttributes: old.otherAttributes }) === JSON.stringify({ id: item.id, color: item.color, otherAttributes: item.otherAttributes }))) {
+        //         return old
+        //     }
+        // })
+        // //
+        // console.log(duplicate); 
+
+        this.setState({
             cart: cart,
             initial: false
-         })
+        })
     }
 
     setMiniCart = () => {
-        this.setState({ 
+        this.setState({
             miniCart: !this.state.miniCart,
-         })
+        })
     }
 
     render() {
         const { currency, category, symbol, cart, miniCart } = this.state;
-        const { setCurrency, setCategory, setCart, setMiniCart } = this;
+        const { setCurrency, setCategory, setCart, setMiniCart, updateCart } = this;
 
         // get & parse data from session storage
         const currentSessionStorage = JSON.parse(sessionStorage.getItem("currentState"));
@@ -73,11 +124,11 @@ export class UserProvider extends Component {
                 category: this.state.category,
                 symbol: this.state.symbol,
                 cart: this.state.cart,
-    
+
             }
             sessionStorage.setItem("currentState", JSON.stringify(currentState))
         }
-        
+
         return (
             <UserContext.Provider value={{
                 currency,
@@ -86,6 +137,7 @@ export class UserProvider extends Component {
                 cart,
                 miniCart,
                 setCart,
+                updateCart,
                 setCurrency,
                 setCategory,
                 setMiniCart,

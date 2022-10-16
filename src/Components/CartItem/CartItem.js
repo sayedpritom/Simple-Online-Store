@@ -123,15 +123,21 @@ class CartItem extends Component {
 
             const currentContext = this.context.cart
 
-            
+
             if (name === 'deleteItem') {
                 const others = currentContext.filter(item => item.index !== this.props?.item.index)
-                this.context.setCart(others)
+                this.context.updateCart(others)
 
             } else {
-                const updatedCart = currentContext.map(item => {
+                const updatedItem = {
+                    id: this.props?.item.id,
+                    index: this.props?.item.index,
+                    color: this.state.color,
+                    quantity: quantity,
+                    otherAttributes: this.state.otherAttributes,
+                }
 
-                    debugger
+                const updatedCart = currentContext.map(item => {
                     if (item.index === this.props?.item.index) {
                         item.id = this.props?.item.id;
                         item.index = this.props?.item.index;
@@ -147,14 +153,15 @@ class CartItem extends Component {
                         if (name === "otherAttributes") item.otherAttributes = value;
 
                         if (name === "totalPrice") item.totalPrice = value;
-
                         // return item
-                    }
+                    } 
 
                     return item;
 
                 })
-                this.context.setCart(updatedCart)
+
+
+                this.context.updateCart(updatedCart, updatedItem)
             }
 
         }
@@ -225,36 +232,6 @@ class CartItem extends Component {
         }
 
 
-
-
-
-
-
-        // the problem is here, calculating the total price of each items in context & resetting them with the total price. Instead I can create total price with initial value & update that value in increase, decrease handlers
-
-        // find it's total price
-        const totalPrice = this.state.quantity * this.state.price.amount;
-
-        // create a new item
-        const updatedItem = { ...currentItem, totalPrice }
-
-        // replace the old item by the new one in a new array
-        const updatedCart = this.context.cart.map(item => {
-            if (item.index === this.props?.item.index) {
-                return updatedItem
-            } else {
-                return item
-            }
-        })
-
-        // if the old cart is not equals to the new cart then update the cart. This helps preventing infinite loop. 
-        if (JSON.stringify(this.context.cart) !== JSON.stringify(updatedCart)) {
-            // this.context.setCart(updatedCart)
-        }
-
-
-
-
         return (
             <div className='cart-item' >
                 <div className={`product-info ${miniCart && 'product-info-mini'}`}>
@@ -292,7 +269,7 @@ class CartItem extends Component {
                     </div>
                     <div className={`cart-item-image ${miniCart && 'cart-item-image-mini'}`}>
                         <img src={gallery?.[this.state.preview]} alt="" />
-                        <div style={{display: `${gallery?.length < 2 ? 'none' : 'block'}`}} className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
+                        <div style={{ display: `${gallery?.length < 2 ? 'none' : 'block'}` }} className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
                             <button onClick={() => previous(this.state.preview)}> &lt; </button>
                             <button onClick={() => next(this.state.preview)}> &gt; </button>
                         </div>
