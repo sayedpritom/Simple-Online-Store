@@ -9,7 +9,7 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import { Link } from 'react-router-dom';
 
 
-import Cart from '../Cart/Cart.js';
+import CartComponents from '../CartComponents/CartComponents.js';
 import navigator from '../HOC/navigator';
 
 
@@ -146,7 +146,7 @@ class Header extends Component {
                         </button>
                         <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }}>
                             <div className='cart-holder'>
-                                <Cart miniCart={true} />
+                                <CartComponents miniCart={true} />
                                 <button onClick={() => viewBag()} className='view-bag-btn'>View Bag</button>
                                 <button className='check-out-btn'>Check Out</button>
                             </div>

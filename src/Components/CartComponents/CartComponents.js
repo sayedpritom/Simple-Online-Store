@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import UserContext from '../../Context/UserContext';
-import CartItem from '../CartItem/CartItem'
-import './Cart.css'
+import CartComponent from '../CartComponent/CartComponent'
+import './CartComponents.css'
 
-class Cart extends Component {
+class CartComponents extends Component {
     static contextType = UserContext
 
     render() {
@@ -28,7 +28,7 @@ class Cart extends Component {
                         : <p className='cart-heading'>Cart</p>
                 }
                 {
-                    cart.map(item => <CartItem key={item.index} item={item} miniCart={miniCart} />)
+                    cart.map(item => <CartComponent key={item.index} item={item} miniCart={miniCart} />)
                 }
                 {
                     !miniCart ?
@@ -52,4 +52,4 @@ class Cart extends Component {
     }
 }
 
-export default Cart;
+export default CartComponents;

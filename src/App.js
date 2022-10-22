@@ -5,7 +5,7 @@ import Category from './Pages/Category/Category';
 import { UserProvider } from './Context/UserContext';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductDescription from './Pages/Category/ProductDescription/ProductDescription';
-import Bag from './Pages/Bag/Bag';
+import Cart from './Pages/Cart/Cart';
 
 
 class App extends Component {
@@ -19,7 +19,7 @@ class App extends Component {
               <Routes>
                 <Route index element={<Category />} />
                 <Route path="pdp/:id" element={<ProductDescription />} />
-                <Route path="/cart" element={<Bag />} />
+                <Route path="/cart" element={<Cart />} />
               </Routes>
             </BrowserRouter>
           </UserProvider>

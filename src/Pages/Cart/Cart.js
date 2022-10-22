@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import Cart from '../../Components/Cart/Cart';
+import CartComponents from '../../Components/CartComponents/CartComponents';
 import UserContext from '../../Context/UserContext';
-import './Bag.css'
+import './Cart.css'
 
-class Bag extends Component {
+class Cart extends Component {
     static contextType = UserContext
 
     render() {
  
         return (
             <div> 
-                <Cart miniCart={false}></Cart>
+                <CartComponents miniCart={false}></CartComponents>
             </div>
         );
 
     }
 }
 
-export default Bag;
+export default Cart;

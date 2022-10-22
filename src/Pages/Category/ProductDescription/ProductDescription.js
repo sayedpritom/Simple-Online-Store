@@ -156,8 +156,9 @@ class ProductDescription extends Component {
             const isFound = numberOfMatchesByAttributes.find(item => item === true) ? "found" : "notFound"
 
             if (isFound === "notFound") {
-                this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
+                // this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
             }
+            this.context.setCart({ id, color, quantity, totalPrice, otherAttributes, index })
         }
 
         return (

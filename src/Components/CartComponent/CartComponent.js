@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import UserContext from '../../Context/UserContext';
-import './CartItem.css'
+import './CartComponent.css'
 
 
-class CartItem extends Component {
+class CartComponent extends Component {
     static contextType = UserContext;
 
     constructor(props) {
@@ -106,6 +106,7 @@ class CartItem extends Component {
         const selectedOthersAttributes = currentItem.otherAttributes;
 
 
+        // check cart status
         const miniCart = this.props.miniCart;
 
         // Get the attributes 
@@ -166,20 +167,20 @@ class CartItem extends Component {
 
         }
 
-        // Attribute selectors
+        // Change attributes
         const pickColor = (attribute) => {
-            this.setState({ color: attribute })
-            updateCartInContext("color", attribute)
+            !miniCart && this.setState({ color: attribute })
+            !miniCart && updateCartInContext("color", attribute)
         }
 
         const pickOtherAttributes = (name, attribute) => {
-            this.setState({
+            !miniCart && this.setState({
                 otherAttributes: {
                     name: name,
                     value: attribute
                 }
             })
-            updateCartInContext("otherAttributes", {
+            !miniCart && updateCartInContext("otherAttributes", {
                 name: name,
                 value: attribute
             })
@@ -196,11 +197,11 @@ class CartItem extends Component {
 
             totalPrice = newQuantity * this.state.price.amount
 
-            updateCartInContext("totalPrice", totalPrice)
-            updateCartInContext("quantity", newQuantity)
+            !miniCart && updateCartInContext("totalPrice", totalPrice)
+            !miniCart && updateCartInContext("quantity", newQuantity)
 
             // Remove the item from cart if it's quantity becomes 0
-            newQuantity < 1 && updateCartInContext('deleteItem', 0)
+            !miniCart && newQuantity < 1 && updateCartInContext('deleteItem', 0)
         }
 
 
@@ -280,4 +281,4 @@ class CartItem extends Component {
     }
 }
 
-export default CartItem;
+export default CartComponent;
