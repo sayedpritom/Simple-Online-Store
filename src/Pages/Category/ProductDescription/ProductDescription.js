@@ -5,7 +5,7 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import UserContext from '../../../Context/UserContext';
 
 
-
+// A function for supporting html descriptions texts 
 function createMarkup(description) {
     return { __html: `${description}` };
 }
@@ -112,7 +112,7 @@ class ProductDescription extends Component {
     }
 
     render() {
-        const { id, brand, name, prices, gallery, inStock, description, category, attributes, } = this.state.product;
+        const { id, brand, name, gallery, description, attributes } = this.state.product;
 
         // Get the attributes 
         const colorAttribute = attributes?.find(attribute => attribute.name === "Color");
@@ -144,20 +144,6 @@ class ProductDescription extends Component {
             const currentCartContext = this.context.cart;
             const index = currentCartContext.length + 1;
 
-            // removing the index by taking other properties(delete item.index removed index from context somehow)
-            const itemsMatchedById = currentCartContext.map(item => {
-                if (item.id === id) {
-                    return { id: item.id, color: item.color, quantity, totalPrice, otherAttributes: item.otherAttributes }
-                }
-            });
-
-            const numberOfMatchesByAttributes = itemsMatchedById.map(item => JSON.stringify(item) === JSON.stringify({ id, color, quantity, totalPrice, otherAttributes }));
-
-            const isFound = numberOfMatchesByAttributes.find(item => item === true) ? "found" : "notFound"
-
-            if (isFound === "notFound") {
-                // this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
-            }
             this.context.setCart({ id, color, quantity, totalPrice, otherAttributes, index })
         }
 

@@ -1,10 +1,8 @@
+import './Card.css'
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import navigator from '../../../Components/HOC/navigator'
 import UserContext from '../../../Context/UserContext'
 import cartIcon from '../../../Images/Icons/Green-Cart-Icon.svg'
-import './Card.css'
-
 
 
 class Card extends Component {
@@ -35,79 +33,11 @@ class Card extends Component {
             const currentCartContext = this.context.cart
             const index = currentCartContext.length + 1
 
-
-            const newCart = { id, color, otherAttributes }
-
-            // // get decision if the item will be added or not
-            // const addNewItem = function () {
-
-            //     const result = (currentCartContext.filter(item => item.id === id)).find(item => {
-            //         const { id, color, quantity, totalPrice, otherAttributes } = item
-            //         const itemWithoutIndex = { id, color, quantity, totalPrice, otherAttributes }
-
-            //         if (JSON.stringify(itemWithoutIndex) === JSON.stringify(newCart)) {
-            //             item.quantity = item.quantity + 1;
-            //             return item
-            //         }
-            //     })
-
-            //     // const result2 = (currentCartContext.filter(item => item.id === id))
-
-            //     console.log(result)
-
-            //     return result
-            // }()
-
-            // if (addNewItem) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
-
-
-            // const operation = currentCartContext.map(item => {
-            //     const { id, color, quantity, totalPrice, otherAttributes, index } = item
-            //     const newQuantity = quantity + 1
-            //     const newTotalPrice = newQuantity * price.amount
-
-            //     let newItem = { id, color, quantity, totalPrice, otherAttributes, index }
-
-            //     console.log(JSON.stringify({ id, color, otherAttributes }), JSON.stringify(newCart));
-
-            //     if (JSON.stringify({ id, color, otherAttributes }) === JSON.stringify(newCart)) {
-            //         return newItem = { id, color, quantity: newQuantity, totalPrice: newTotalPrice, otherAttributes, index }
-            //     }
-            //     return newItem
-            // })
-
-            // // if (operation === undefined) this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
-            // // this.context.setCart()
-            // if (operation.find(item => item.id === id)) {
-            //     this.context.setCart(operation)
-            // } else if (operation.find(item => item.id === id)) {
-
-
-            // } else {
-            //     this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...operation])
-            // }
-            // console.log(operation)
-
             this.context.setCart({ id, color, quantity, totalPrice, otherAttributes, index })
-
-            // operation.quantity++
-
-
-            // (currentCartContext.filter(item => item.id === id)).find(item => {
-            //     const { id, color, quantity, totalPrice, otherAttributes } = item
-            //     const itemWithoutIndex = { id, color, quantity, totalPrice, otherAttributes }
-
-            //     if (JSON.stringify(itemWithoutIndex) === JSON.stringify(newCart)) {
-            //         item.quantity = item.quantity + 1;
-            //         console.log(item);
-            //         // return item
-            //     } else {
-            //         this.context.setCart([{ id, color, quantity, totalPrice, otherAttributes, index }, ...this.context.cart])
-            //     }
-            // })
 
         }
 
+        // go to product description page when clicked on the product card div area but not on the add to cart icon
         const redirectToDescriptionPage = (e) => {
             e.target.className !== "green-cart-icon-image" && this.props.navigate(`/pdp/${id}`)
         }
@@ -118,7 +48,7 @@ class Card extends Component {
                     <img className='card-image' src={gallery[0]} alt="" />
                     <button ref={this.cartButtonRef} onClick={() => addToCart(id)} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
                 </div>
-                <p className='product-names'>{name}</p>
+                <p className='product-name-card'>{name}</p>
                 <p className='product-price'>{this.context.symbol}{price.amount}</p>
             </div >
         )

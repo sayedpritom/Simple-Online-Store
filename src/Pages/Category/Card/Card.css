@@ -15,10 +15,6 @@
     object-position: top;
 }
 
-.card:hover .green-cart-icon{
-    display: block;
-}
-
 .green-cart-icon {
     position: absolute;
     width: 52px;
@@ -33,17 +29,16 @@
     border: none;
 }
 
+.card:hover .green-cart-icon{
+    display: block;
+}
+
 .green-cart-icon >img {
     width: 100%;
     height: auto;
 }
 
-.product-link{
-    text-decoration: none;
-}
-
-
-.product-names {
+.product-name-card {
     font-weight: 300;
     font-size: 18px;
 }

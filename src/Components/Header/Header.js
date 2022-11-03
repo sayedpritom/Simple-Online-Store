@@ -107,29 +107,19 @@ class Header extends Component {
 
         return (
             <div className="header container">
-
-                {/* Mapping all the categories available */}
                 <div>
                     {this.state.categories?.map(category => <Link key={category.name} to="/"><button className={`categoryBtn ${category.name === this.context.category && 'active'}`} onClick={() => setCategory(category.name.toString())
                     }>{category.name}</button></Link>)}
                 </div>
-
-                {/* Brand Logo */}
                 <div>
                     <Link to="/"><img className='headerLogo' src={logo} alt="" /></Link>
                 </div>
-
-                {/* Currency Dropdown & cart  */}
                 <div className='CartAndCurrency'>
-
                     <div className='currencyDropDown' ref={this.wrapperRefCurrency}>
-                        {/* Currency dropdown button */}
                         <button className='currencyDropDownBtn' onClick={() => this.setState({ currencyDropDown: !this.state.currencyDropDown })}>
                             {symbol}
                             {this.state.currencyDropDown ? <img src={currencyOpenedIcon} alt="" /> : <img src={currencyClosedIcon} alt="" />}
                         </button>
-
-                        {/* Currency Picker Buttons */}
                         {
                             this.state.currencyDropDown &&
                             <div className='currencies'>
@@ -137,8 +127,6 @@ class Header extends Component {
                             </div>
                         }
                     </div>
-
-                    {/* Cart Button */}
                     <div className='cart-icon' ref={this.wrapperRefCart}>
                         <button onClick={() => this.setState({ miniCartOpen: !this.state.miniCartOpen })} className='cartBtn'>
                             <img src={cartIcon} alt="" />
