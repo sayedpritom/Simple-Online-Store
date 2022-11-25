@@ -135,7 +135,7 @@ class Header extends Component {
                             </button>
                             <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }}>
                                 <div className='cart-holder'>
-                                    <CartComponents miniCart={true} />
+                                    {this.state.miniCartOpen && <CartComponents miniCart={true} />}
                                     <button onClick={() => viewBag()} className='view-bag-btn'>View Bag</button>
                                     <button className='check-out-btn'>Check Out</button>
                                 </div>
