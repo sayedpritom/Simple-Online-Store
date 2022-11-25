@@ -18,6 +18,7 @@ class App extends Component {
               <Header />
               <Routes>
                 <Route index element={<Category />} />
+                <Route path="/products/:category" element={<Category />} />
                 <Route path="pdp/:id" element={<ProductDescription />} />
                 <Route path="/cart" element={<Cart />} />
               </Routes>

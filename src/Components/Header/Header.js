@@ -106,43 +106,45 @@ class Header extends Component {
         }
 
         return (
-            <div className="header container">
-                <div>
-                    {this.state.categories?.map(category => <Link key={category.name} to="/"><button className={`categoryBtn ${category.name === this.context.category && 'active'}`} onClick={() => setCategory(category.name.toString())
-                    }>{category.name}</button></Link>)}
-                </div>
-                <div>
-                    <Link to="/"><img className='headerLogo' src={logo} alt="" /></Link>
-                </div>
-                <div className='CartAndCurrency'>
-                    <div className='currencyDropDown' ref={this.wrapperRefCurrency}>
-                        <button className='currencyDropDownBtn' onClick={() => this.setState({ currencyDropDown: !this.state.currencyDropDown })}>
-                            {symbol}
-                            {this.state.currencyDropDown ? <img src={currencyOpenedIcon} alt="" /> : <img src={currencyClosedIcon} alt="" />}
-                        </button>
-                        {
-                            this.state.currencyDropDown &&
-                            <div className='currencies'>
-                                {this.state.currencies?.map(currency => <button key={currency.label} onClick={() => changeCurrency(currency.label, currency.symbol)} className='currencyBtn'>{`${currency.symbol} ${currency.label}`}</button>)}
-                            </div>
-                        }
+            <>
+                <div className="header">
+                    <div>
+                        {this.state.categories?.map(category => <Link key={category.name} to={`/products/${category.name}`}><button className={`categoryBtn ${category.name === this.context.category && 'active'}`} onClick={() => setCategory(category.name.toString())
+                        }>{category.name}</button></Link>)}
                     </div>
-                    <div className='cart-icon' ref={this.wrapperRefCart}>
-                        <button onClick={() => this.setState({ miniCartOpen: !this.state.miniCartOpen })} className='cartBtn'>
-                            <img src={cartIcon} alt="" />
-                            <p className='cart-length'>{cartQuantity}</p>
-                        </button>
-                        <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }}>
-                            <div className='cart-holder'>
-                                <CartComponents miniCart={true} />
-                                <button onClick={() => viewBag()} className='view-bag-btn'>View Bag</button>
-                                <button className='check-out-btn'>Check Out</button>
+                    <div>
+                        <Link to="/"><img className='headerLogo' src={logo} alt="" /></Link>
+                    </div>
+                    <div className='CartAndCurrency'>
+                        <div className='currencyDropDown' ref={this.wrapperRefCurrency}>
+                            <button className='currencyDropDownBtn' onClick={() => this.setState({ currencyDropDown: !this.state.currencyDropDown })}>
+                                {symbol}
+                                {this.state.currencyDropDown ? <img src={currencyOpenedIcon} alt="" /> : <img src={currencyClosedIcon} alt="" />}
+                            </button>
+                            {
+                                this.state.currencyDropDown &&
+                                <div className='currencies'>
+                                    {this.state.currencies?.map(currency => <button key={currency.label} onClick={() => changeCurrency(currency.label, currency.symbol)} className='currencyBtn'>{`${currency.symbol} ${currency.label}`}</button>)}
+                                </div>
+                            }
+                        </div>
+                        <div className='cart-icon' ref={this.wrapperRefCart}>
+                            <button onClick={() => this.setState({ miniCartOpen: !this.state.miniCartOpen })} className='cartBtn'>
+                                <img src={cartIcon} alt="" />
+                                <p style={{ display: `${cartQuantity > 0 ? 'block' : 'none'}` }} className='cart-length'>{cartQuantity}</p>
+                            </button>
+                            <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }}>
+                                <div className='cart-holder'>
+                                    <CartComponents miniCart={true} />
+                                    <button onClick={() => viewBag()} className='view-bag-btn'>View Bag</button>
+                                    <button className='check-out-btn'>Check Out</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }} className='cart-dark-bg'></div>
                 </div>
-            </div>
+                <div style={{ display: `${this.state.miniCartOpen ? 'block' : 'none'}` }} className='cart-dark-bg'></div>
+            </>
         );
     }
 }

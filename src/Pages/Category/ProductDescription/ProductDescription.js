@@ -3,12 +3,7 @@ import './ProductDescription.css';
 import withRouter from '../../../Components/HOC/withRouter';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import UserContext from '../../../Context/UserContext';
-
-
-// A function for supporting html descriptions texts 
-function createMarkup(description) {
-    return { __html: `${description}` };
-}
+import parse from 'html-react-parser';
 
 
 class ProductDescription extends Component {
@@ -112,7 +107,7 @@ class ProductDescription extends Component {
     }
 
     render() {
-        const { id, brand, name, gallery, description, attributes } = this.state.product;
+        const { id, brand, name, inStock, gallery, description, attributes } = this.state.product;
 
         // Get the attributes 
         const colorAttribute = attributes?.find(attribute => attribute.name === "Color");
@@ -160,12 +155,17 @@ class ProductDescription extends Component {
                 <div className='product-info'>
                     <h2 className='product-brand'>{brand}</h2>
                     <h2 className='product-name'>{name}</h2>
+                    {
+                        inStock ?
+                            <p style={{"marginBottom": "24px"}} className="in-stock">In stock</p> :
+                            <p style={{"marginBottom": "24px"}} className="out-of-stock">Out of stock</p>
+                    }
                     {/* Check for totalExisting attribute that is not about color if there is totalExisting then show it in it's style */}
                     {otherAttributes &&
                         <div>
                             <p className='others'>{otherAttributes.name}</p>
-                            <div className='other-attributes'>
-                                {otherAttributes.items.map(item => <button key={item.value} onClick={() => pickOtherAttributes(otherAttributes.name, item.value)} className={`${this.state.otherAttributes.value === item.value && 'selected-other-attributes'}`}>{item.value}</button>)}
+                            <div className='other-attributes-description'>
+                                {otherAttributes.items.map(item => <button key={item.value} onClick={() => pickOtherAttributes(otherAttributes.name, item.value)} className={`${this.state.otherAttributes.value === item.value && 'selected-other-attributes-description'}`}>{item.value}</button>)}
                             </div>
                         </div>
                     }
@@ -173,8 +173,8 @@ class ProductDescription extends Component {
                     {colorAttribute &&
                         <div>
                             <p className='color'>{colorAttribute.name}:</p>
-                            <div className='color-attributes'>
-                                {colorAttribute.items.map(item => <button className={`${item.value === this.state.color && 'selected-color-attribute'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
+                            <div className='color-attributes-description'>
+                                {colorAttribute.items.map(item => <button className={`${item.value === this.state.color && 'selected-color-attribute-description'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
                             </div>
                         </div>
                     }
@@ -182,8 +182,8 @@ class ProductDescription extends Component {
                         <p className='price'>Price:</p>
                         <p className='amount'>{this.state.price.symbol}{this.state.price.amount}</p>
                     </div>
-                    <button onClick={() => addToCart(id)} className="add-to-cart-btn">Add To Cart</button>
-                    <div className='product-description-text' dangerouslySetInnerHTML={createMarkup(description)}></div>
+                    <button onClick={() => inStock && addToCart(id)} className="add-to-cart-btn">Add To Cart</button>
+                    <div className='product-description-text'>{parse(`${description}`)}</div>
                 </div>
             </div>
         );

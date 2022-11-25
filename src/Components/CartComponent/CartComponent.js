@@ -197,11 +197,11 @@ class CartComponent extends Component {
 
             totalPrice = newQuantity * this.state.price.amount
 
-            !miniCart && updateCartInContext("totalPrice", totalPrice)
-            !miniCart && updateCartInContext("quantity", newQuantity)
+            updateCartInContext("totalPrice", totalPrice)
+            updateCartInContext("quantity", newQuantity)
 
             // Remove the item from cart if it's quantity becomes 0
-            !miniCart && newQuantity < 1 && updateCartInContext('deleteItem', 0)
+            newQuantity < 1 && updateCartInContext('deleteItem', 0)
         }
 
 
@@ -248,16 +248,16 @@ class CartComponent extends Component {
                         <div>
                             <p className={`others ${miniCart && 'others-mini'}`}>{otherAttributes.name}</p>
                             <div className={`other-attributes ${miniCart && 'other-attributes-mini'}`}>
-                                {otherAttributes.items.map(item => <button key={item.value} onClick={() => pickOtherAttributes(otherAttributes.name, item.value)} className={`${selectedOthersAttributes.value === item.value && 'selected-other-attributes'}`}>{item.value}</button>)}
+                                {otherAttributes.items.map(item => <button key={item.value} className={`${selectedOthersAttributes.value === item.value && 'selected-other-attributes'}`}>{item.value}</button>)}
                             </div>
                         </div>
                     }
                     {/* Check if the color attribute exists, if so then show in the colors style*/}
                     {colorAttribute &&
                         <div>
-                            <p className={`color ${miniCart && 'others-mini'}`}>{colorAttribute.name}:</p>
+                            <p className={`color ${miniCart && 'color-mini'}`}>{colorAttribute.name}:</p>
                             <div className={`color-attributes ${miniCart && 'color-attributes-mini'}`}>
-                                {colorAttribute.items.map(item => <button className={`${item.value === color && 'selected-color-attribute'} ${item.value === color && miniCart && 'selected-color-attribute-mini'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} onClick={() => pickColor(item.value)}></button>)}
+                                {colorAttribute.items.map(item => <button className={`${item.value === color && 'selected-color-attribute'} ${item.value === color && miniCart && 'selected-color-attribute-mini'}`} key={item.value} style={{ backgroundColor: `${item.value}` }} ></button>)}
                             </div>
                         </div>
                     }
@@ -270,7 +270,7 @@ class CartComponent extends Component {
                     </div>
                     <div className={`cart-item-image ${miniCart && 'cart-item-image-mini'}`}>
                         <img src={gallery?.[this.state.preview]} alt="" />
-                        <div style={{ display: `${gallery?.length < 2 ? 'none' : 'block'}` }} className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
+                        <div style={{ display: `${gallery?.length > 1 && !miniCart ? 'block' : 'none'}` }} className={`next-previous-buttons ${miniCart && 'next-previous-buttons-mini'}`}>
                             <button onClick={() => previous(this.state.preview)}> &lt; </button>
                             <button onClick={() => next(this.state.preview)}> &gt; </button>
                         </div>

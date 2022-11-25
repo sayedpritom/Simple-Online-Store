@@ -1,15 +1,20 @@
 .header {
-    height: 75px;
+    height: 67px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+    padding-bottom: 0;
 }
 
 .categoryBtn {
     background: none;
     border: none;
     text-transform: uppercase;
-    padding: 20px;
+    padding: 25px;
     cursor: pointer;
 }
 
@@ -130,7 +135,7 @@
     right: 0;
     top: 67px;
     background-color: rgba(0, 0, 0, 0.131);
-    position: absolute;
+    position: fixed;
     z-index: 50;
     right: 0;
 }

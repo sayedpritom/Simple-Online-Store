@@ -32,6 +32,8 @@ class Category extends Component {
             products {
             id
             name
+            brand
+            inStock
             gallery
             attributes {
               name

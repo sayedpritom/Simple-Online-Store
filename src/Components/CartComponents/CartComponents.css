@@ -55,11 +55,6 @@
     border-radius: 10px;
 }
 
-/* Handle on hover */
-.miniCart::-webkit-scrollbar-thumb:hover {
-    background: lightgray;
-}
-
 /*  */
 
 .cart-heading-mini {
@@ -72,4 +67,10 @@
 
 .item-count-miniCart {
     font-weight: 500;
+}
+
+.total-costing-mini {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 7px 0 0;
 }

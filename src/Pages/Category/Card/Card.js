@@ -10,7 +10,7 @@ class Card extends Component {
 
     render() {
 
-        const { id, name, gallery, prices, attributes } = this.props.product
+        const { id, name, brand, gallery, prices, inStock, attributes } = this.props.product
         let price = prices.find(price => price.currency.label === this.context.currency && price.currency.label)
 
 
@@ -46,9 +46,14 @@ class Card extends Component {
             <div onClick={redirectToDescriptionPage} className='card'>
                 <div className='card-image'>
                     <img className='card-image' src={gallery[0]} alt="" />
-                    <button ref={this.cartButtonRef} onClick={() => addToCart(id)} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
+                    <button ref={this.cartButtonRef} onClick={() => inStock && addToCart(id)} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
                 </div>
-                <p className='product-name-card'>{name}</p>
+                <p className='product-name-card'>{name} {brand}</p>
+                {
+                    inStock ?
+                    <p className="in-stock">In stock</p> :
+                    <p className="out-of-stock">Out of stock</p>
+                }
                 <p className='product-price'>{this.context.symbol}{price.amount}</p>
             </div >
         )

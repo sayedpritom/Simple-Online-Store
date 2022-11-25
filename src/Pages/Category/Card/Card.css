@@ -43,6 +43,16 @@
     font-size: 18px;
 }
 
+.in-stock {
+    color: #5ECE7B;
+    margin: 0;
+}
+
+.out-of-stock {
+    color: rgb(217, 26, 26);
+    margin: 0;
+}
+
 .product-price {
     font-weight: 500;
     font-size: 18px;
