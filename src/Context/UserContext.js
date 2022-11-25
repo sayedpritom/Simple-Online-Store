@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { json } from 'react-router-dom';
 
 const UserContext = React.createContext();
 
@@ -13,7 +12,6 @@ export class UserProvider extends Component {
             symbol: '$',
             cart: [],
             initial: true,
-            miniCart: false,
         }
 
     }
@@ -75,27 +73,9 @@ export class UserProvider extends Component {
     }
 
     updateCart = (cart, item) => {
-
-        // // 
-        // const oldCart = this.state.cart;
-
-        // const duplicate = oldCart?.map(old => {
-        //     if ((JSON.stringify({ id: old.id, color: old.color, otherAttributes: old.otherAttributes }) === JSON.stringify({ id: item.id, color: item.color, otherAttributes: item.otherAttributes }))) {
-        //         return old
-        //     }
-        // })
-        // //
-        // console.log(duplicate); 
-
         this.setState({
             cart: cart,
             initial: false
-        })
-    }
-
-    setMiniCart = () => {
-        this.setState({
-            miniCart: !this.state.miniCart,
         })
     }
 

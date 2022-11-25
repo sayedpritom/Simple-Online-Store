@@ -113,7 +113,7 @@ class Header extends Component {
                         }>{category.name}</button></Link>)}
                     </div>
                     <div>
-                        <Link to="/"><img className='headerLogo' src={logo} alt="" /></Link>
+                        <Link to="/products/all"  onClick={() => setCategory("all")}><img className='headerLogo' src={logo} alt="" /></Link>
                     </div>
                     <div className='CartAndCurrency'>
                         <div className='currencyDropDown' ref={this.wrapperRefCurrency}>

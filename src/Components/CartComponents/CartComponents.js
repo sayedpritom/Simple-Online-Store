@@ -47,9 +47,9 @@ class CartComponents extends Component {
                     }
                 }
                 `,
-            }))
+                }))
         })
-        
+
         // fulfill all the unfulfilled promises & set the total sum of the cart products prices in state. 
         Promise.all([...promises])
             .then(result => {
@@ -64,14 +64,14 @@ class CartComponents extends Component {
 
                 // get the total sum
                 const sum = this.context.cart.map(item => {
-                    const amount = productsIdAmount.find(product => product.id === item.id).amount* item.quantity
+                    const amount = productsIdAmount.find(product => product.id === item.id).amount * item.quantity
                     return amount
                 }).reduce((accumulator, value) => accumulator + value, 0).toFixed(2)
 
                 const oldTotal = this.state.totalPrice;
 
-                if(oldTotal !== sum) {
-                    this.setState({"totalPrice": sum})
+                if (oldTotal !== sum) {
+                    this.setState({ "totalPrice": sum })
                 }
             })
 

@@ -3,6 +3,7 @@ import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import './Category.css';
 import Card from './Card/Card';
 import UserContext from '../../Context/UserContext';
+import withRouter from '../../Components/HOC/withRouter';
 
 
 class Category extends Component {
@@ -23,11 +24,13 @@ class Category extends Component {
       cache: new InMemoryCache(),
     });
 
+    const { currency, symbol, category, cart, miniCart, setCurrency, setCategory, setMiniCart } = this.context;
+
     client
       .query({
         query: gql`
         {
-          category(input: {title: ${JSON.stringify(this.context.category)}}) {
+          category(input: {title: ${JSON.stringify(this.props.params.category)}}) {
             name
             products {
             id
@@ -55,6 +58,7 @@ class Category extends Component {
       .then((result) => {
 
         this.setState({ products: result.data.category.products, currency: this.context.symbol, category: this.context.category })
+        setCategory(this.props.params.category)
 
       });
   }
@@ -79,7 +83,7 @@ class Category extends Component {
   render() {
     return (
       <div>
-        <h1 className='category-name'>{this.context.category.charAt(0).toUpperCase() + this.context.category.slice(1)}</h1>
+        <h1 className='category-name'>{this.context.category?.charAt(0).toUpperCase() + this.context.category?.slice(1)}</h1>
         <div className='products'>
           {this.state.products.map(product => {
             return <Card product={product} key={product.id} />
@@ -90,4 +94,4 @@ class Category extends Component {
   }
 }
 
-export default Category;
+export default withRouter(Category);
