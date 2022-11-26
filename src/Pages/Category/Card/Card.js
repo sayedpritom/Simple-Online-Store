@@ -14,9 +14,7 @@ class Card extends Component {
         let price = prices.find(price => price.currency.label === this.context.currency && price.currency.label)
 
 
-
         const addToCart = id => {
-
             const findColor = (attributes.find(item => item.name === 'Color'))?.items[0].value
             const findOthers = attributes.find(item => item.name !== 'Color')
 
@@ -33,8 +31,8 @@ class Card extends Component {
             const currentCartContext = this.context.cart
             const index = currentCartContext.length + 1
 
+            // set the item to the cart with it's first color & first other attribute & it's position index
             this.context.setCart({ id, color, quantity, totalPrice, otherAttributes, index })
-
         }
 
         // go to product description page when clicked on the product card div area but not on the add to cart icon

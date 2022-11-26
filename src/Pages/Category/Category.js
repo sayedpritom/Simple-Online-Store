@@ -24,7 +24,7 @@ class Category extends Component {
       cache: new InMemoryCache(),
     });
 
-    const { currency, symbol, category, cart, miniCart, setCurrency, setCategory, setMiniCart } = this.context;
+    const { setCategory } = this.context;
 
     client
       .query({

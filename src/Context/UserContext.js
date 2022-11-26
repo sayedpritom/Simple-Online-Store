@@ -16,7 +16,7 @@ export class UserProvider extends Component {
 
     }
 
-
+    // change currency
     setCurrency = (currency, symbol) => {
         this.setState({
             currency: currency,
@@ -26,6 +26,7 @@ export class UserProvider extends Component {
         })
     }
 
+    // change category
     setCategory = category => {
         this.setState({
             category: category,
@@ -33,16 +34,15 @@ export class UserProvider extends Component {
         })
     }
 
+    // Add new items to the cart. Duplicate items will increase quantity, new items will be added to the queue 
     setCart = cart => {
         const oldCart = this.state.cart;
 
         let duplicates = []
-        let amount = []
 
         oldCart?.map(item => {
             if ((JSON.stringify({ id: item.id, color: item.color, otherAttributes: item.otherAttributes }) === JSON.stringify({ id: cart.id, color: cart.color, otherAttributes: cart.otherAttributes }))) {
                 duplicates.push(item)
-                amount.push(item?.quantity)
             }
         })
 
@@ -72,7 +72,8 @@ export class UserProvider extends Component {
 
     }
 
-    updateCart = (cart, item) => {
+    // update whole cart 
+    updateCart = cart => {
         this.setState({
             cart: cart,
             initial: false
@@ -80,8 +81,8 @@ export class UserProvider extends Component {
     }
 
     render() {
-        const { currency, category, symbol, cart, miniCart } = this.state;
-        const { setCurrency, setCategory, setCart, setMiniCart, updateCart } = this;
+        const { currency, category, symbol, cart } = this.state;
+        const { setCurrency, setCategory, setCart, updateCart } = this;
 
         // get & parse data from session storage
         const currentSessionStorage = JSON.parse(sessionStorage.getItem("currentState"));
@@ -97,7 +98,8 @@ export class UserProvider extends Component {
                 initial: false
             })
         }
-        // if it's not initial state then just keep a copy of the current state saved in session storage for future usage
+        
+        // if it's not initial state or currentSessionStorage is false then save the current state saved in session storage for future usage
         else {
             const currentState = {
                 currency: this.state.currency,
@@ -115,12 +117,10 @@ export class UserProvider extends Component {
                 symbol,
                 category,
                 cart,
-                miniCart,
                 setCart,
                 updateCart,
                 setCurrency,
                 setCategory,
-                setMiniCart,
             }}>
                 {this.props.children}
             </UserContext.Provider>

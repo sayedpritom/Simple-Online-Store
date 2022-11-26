@@ -74,8 +74,6 @@ class CartComponent extends Component {
                     }
 
                 })
-
-
             });
     }
 
@@ -84,7 +82,6 @@ class CartComponent extends Component {
     }
 
     componentDidUpdate() {
-
         // Only rerender if the currency is updated
         const oldCurrency = this.state.price.label;
         const newCurrency = this.context.currency;
@@ -97,14 +94,22 @@ class CartComponent extends Component {
 
     render() {
 
-        const { id, brand, name, prices, gallery, inStock, description, category, attributes, } = this.state.product;
+
+        // In cart context there are saved attributes & values which were manually selected by the user in description page and came here as props. 
+        const savedAttributes = { color: this.props?.item.color, otherAttributes: this.props?.item.otherAttributes, quantity: this.props?.item.quantity };
+
+        // To prevent infinite loop the initial state is used as the state is being set from the render function.
+        if (this.state.initial) {
+            this.setState({ 
+                color: savedAttributes.color,
+                otherAttributes: savedAttributes.otherAttributes,
+                quantity: this.props?.item.quantity,
+                initial: false 
+            })
+        }
 
 
-        // get the current item
-        const currentItem = this.context.cart.find(item => item.index === this.props?.item.index);
-        const { quantity, color } = currentItem;
-        const selectedOthersAttributes = currentItem.otherAttributes;
-
+        const { brand, name, gallery, attributes, } = this.state.product;
 
         // check cart status
         const miniCart = this.props.miniCart;
@@ -114,30 +119,27 @@ class CartComponent extends Component {
         const otherAttributes = attributes?.find(attribute => attribute.name !== "Color");
 
 
+        // get the current cart item & it's selected attributes
+        const currentItem = this.context.cart.find(item => item.index === this.props?.item.index);
+        const { quantity, color } = currentItem;
+        const selectedOthersAttributes = currentItem.otherAttributes;
+
+
         // change the preview image
         const next = preview => preview < gallery.length - 1 && this.setState({ preview: preview + 1 })
         const previous = preview => preview > 0 && this.setState({ preview: preview - 1 })
 
 
-        // Set the attributes in context too
+        // Set the updated cart in context 
         const updateCartInContext = (name, value) => {
 
             const currentContext = this.context.cart
-
 
             if (name === 'deleteItem') {
                 const others = currentContext.filter(item => item.index !== this.props?.item.index)
                 this.context.updateCart(others)
 
             } else {
-                const updatedItem = {
-                    id: this.props?.item.id,
-                    index: this.props?.item.index,
-                    color: this.state.color,
-                    quantity: quantity,
-                    otherAttributes: this.state.otherAttributes,
-                }
-
                 const updatedCart = currentContext.map(item => {
                     if (item.index === this.props?.item.index) {
                         item.id = this.props?.item.id;
@@ -146,45 +148,18 @@ class CartComponent extends Component {
                         item.quantity = quantity;
                         item.otherAttributes = this.state.otherAttributes
 
-
-                        if (name === "color") item.color = value;
-
                         if (name === "quantity") item.quantity = value;
-
-                        if (name === "otherAttributes") item.otherAttributes = value;
-
                         if (name === "totalPrice") item.totalPrice = value;
-                        // return item
-                    } 
+                    }
 
                     return item;
 
                 })
-
-
-                this.context.updateCart(updatedCart, updatedItem)
+                this.context.updateCart(updatedCart)
             }
 
         }
 
-        // Change attributes
-        const pickColor = (attribute) => {
-            !miniCart && this.setState({ color: attribute })
-            !miniCart && updateCartInContext("color", attribute)
-        }
-
-        const pickOtherAttributes = (name, attribute) => {
-            !miniCart && this.setState({
-                otherAttributes: {
-                    name: name,
-                    value: attribute
-                }
-            })
-            !miniCart && updateCartInContext("otherAttributes", {
-                name: name,
-                value: attribute
-            })
-        }
 
         const changeQuantity = (input) => {
 
@@ -202,34 +177,6 @@ class CartComponent extends Component {
 
             // Remove the item from cart if it's quantity becomes 0
             newQuantity < 1 && updateCartInContext('deleteItem', 0)
-        }
-
-
-        const savedAttributes = { color: this.props?.item.color, otherAttributes: this.props?.item.otherAttributes, quantity: this.props?.item.quantity };
-        const attributesLength = Object.keys(savedAttributes).length;
-
-        // if length is more than 1 then it means it has not only the id but other properties too
-        // to prevent infinite loop the initial state is used.
-        if (attributesLength > 1 && this.state.initial) {
-            savedAttributes.color && this.setState({ color: savedAttributes.color })
-            savedAttributes.otherAttributes && this.setState({ otherAttributes: savedAttributes.otherAttributes })
-            savedAttributes.quantity && this.setState({ quantity: savedAttributes.quantity })
-            this.setState({ initial: false })
-        }
-        else if (this.state.initial) {
-            // find out color, attributes & set them
-            const colors = this.state.product.attributes?.find(attribute => attribute.name === "Color")
-            const otherAttributes = this.state.product.attributes?.find(attribute => attribute.name !== "Color")
-            colors && this.setState({ color: colors.items[0].value })
-
-            otherAttributes && this.setState({
-                otherAttributes: {
-                    name: otherAttributes.name,
-                    value: otherAttributes.items[0].value,
-                },
-                initial: false
-            })
-            // this.setState({initial: false})
         }
 
 

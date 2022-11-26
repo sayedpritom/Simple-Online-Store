@@ -14,4 +14,4 @@
 
 ## Used technologies in front-end: 
 * HTML, CSS, 
-* React, React Components, React-Router
+* React, React Components, React-Router, Html-react-parser

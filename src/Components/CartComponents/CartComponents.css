@@ -72,5 +72,9 @@
 .total-costing-mini {
     display: flex;
     justify-content: space-between;
-    margin: 0 7px 0 0;
+    padding: 0 7px 0 0;
+    position: sticky;
+    bottom: 0px;
+    background-color: white;
+    border-top: 1px solid #E5E5E5;
 }

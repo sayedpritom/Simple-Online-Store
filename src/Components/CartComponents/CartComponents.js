@@ -54,7 +54,7 @@ class CartComponents extends Component {
         Promise.all([...promises])
             .then(result => {
 
-                // get id and amount
+                // get the ids and amounts of the cart products
                 const productsIdAmount = result.map(item => {
                     let amount = item.data.product.prices.find(item => item.currency.label === this.context.currency).amount
                     const id = item.data.product.id

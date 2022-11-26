@@ -21,6 +21,7 @@ class ProductDescription extends Component {
         }
     }
 
+    // Get product details by product id
     loadData() {
         const client = new ApolloClient({
             uri: 'http://localhost:4000/',
@@ -79,7 +80,6 @@ class ProductDescription extends Component {
                 // find out & set the color & other attributes
                 const color = result.data.product.attributes.find(attribute => attribute.name === "Color")
                 const otherAttributes = result.data.product.attributes.find(attribute => attribute.name !== "Color")
-
 
 
                 color && this.setState({ color: color.items[0].value })

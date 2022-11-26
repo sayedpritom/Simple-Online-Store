@@ -89,7 +89,7 @@ class Header extends Component {
 
     render() {
         // Get all the data from the global context api
-        const { currency, symbol, category, cart, miniCart, setCurrency, setCategory, setMiniCart } = this.context;
+        const { symbol, cart, setCurrency, setCategory } = this.context;
 
         // Get total added item quantities 
         const cartQuantity = (cart.map(item => item.quantity)).reduce((accumulator, value) => accumulator + value, 0);
