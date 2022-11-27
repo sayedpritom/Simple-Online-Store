@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import UserContext from '../../Context/UserContext';
 import CartComponent from '../CartComponent/CartComponent'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import './CartComponents.css'
+import './CartComponents.css';
+import { toast } from 'react-toastify';
 
 class CartComponents extends Component {
     static contextType = UserContext
@@ -85,6 +86,8 @@ class CartComponents extends Component {
 
         const grandTotal = (totalPrice + tax).toFixed(2);
 
+        const notify = () => toast.success("Order placed successfully! Thank you.", {theme: "dark"});
+
 
         return (
             <div className={`${miniCart && 'miniCart'}`}>
@@ -103,7 +106,7 @@ class CartComponents extends Component {
                             <p>Tax 21%: <span className={miniCart ? 'amount-mini' : 'amount'}>{currencySymbol}{tax}</span></p>
                             <p>Quantity: <span className={miniCart ? 'amount-mini' : 'amount'}>{quantity}</span></p>
                             <p className={miniCart ? 'total-amount-mini' : 'total-amount'}>Total: <span className={miniCart ? 'amount-mini' : 'amount'}>{currencySymbol}{grandTotal}</span></p>
-                            <button className={miniCart ? 'place-order-btn-mini' : 'place-order-btn'}>Order</button>
+                            <button onClick={() => notify()} className={miniCart ? 'place-order-btn-mini' : 'place-order-btn'}>Place order</button>
                         </div>
 
                         :

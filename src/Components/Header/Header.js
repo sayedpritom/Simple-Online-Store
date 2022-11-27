@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 
 import CartComponents from '../CartComponents/CartComponents.js';
 import navigator from '../HOC/navigator';
+import { toast } from 'react-toastify';
 
 
 class Header extends Component {
@@ -105,6 +106,8 @@ class Header extends Component {
             this.props.navigate('/cart')
         }
 
+        const notify = () => toast.success("Order placed successfully! Thank you.", {theme: "dark"});
+
         return (
             <>
                 <div className="header">
@@ -137,7 +140,7 @@ class Header extends Component {
                                 <div className='cart-holder'>
                                     {this.state.miniCartOpen && <CartComponents miniCart={true} />}
                                     <button onClick={() => viewBag()} className='view-bag-btn'>View Bag</button>
-                                    <button className='check-out-btn'>Check Out</button>
+                                    <button onClick={() => notify()} className='check-out-btn'>Place Order</button>
                                 </div>
                             </div>
                         </div>

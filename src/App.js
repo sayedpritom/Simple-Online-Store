@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ProductDescription from './Pages/Category/ProductDescription/ProductDescription';
 import Cart from './Pages/Cart/Cart';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
   render() {
@@ -25,6 +27,7 @@ class App extends Component {
             </BrowserRouter>
           </UserProvider>
         </div>
+        <ToastContainer />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import navigator from '../../../Components/HOC/navigator'
 import UserContext from '../../../Context/UserContext'
 import cartIcon from '../../../Images/Icons/Green-Cart-Icon.svg'
-
+import { toast } from 'react-toastify';
 
 class Card extends Component {
     static contextType = UserContext
@@ -40,17 +40,20 @@ class Card extends Component {
             e.target.className !== "green-cart-icon-image" && this.props.navigate(`/pdp/${id}`)
         }
 
+        const notify = () => toast.error("Could not add to cart. Out of stock product!", {theme: "dark"});
+
         return (
             <div onClick={redirectToDescriptionPage} className='card'>
                 <div className='card-image'>
                     <img className='card-image' src={gallery[0]} alt="" />
-                    <button ref={this.cartButtonRef} onClick={() => inStock && addToCart(id)} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
+                    <button ref={this.cartButtonRef}
+                        onClick={() => inStock ? addToCart(id) : notify()} className='green-cart-icon'><img className='green-cart-icon-image' src={cartIcon} alt="" /></button>
                 </div>
                 <p className='product-name-card'>{name} {brand}</p>
                 {
                     inStock ?
-                    <p className="in-stock">In stock</p> :
-                    <p className="out-of-stock">Out of stock</p>
+                        <p className="in-stock">In stock</p> :
+                        <p className="out-of-stock">Out of stock</p>
                 }
                 <p className='product-price'>{this.context.symbol}{price.amount}</p>
             </div >
