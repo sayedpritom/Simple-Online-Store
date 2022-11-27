@@ -23,7 +23,7 @@ class CartComponents extends Component {
         const currencySymbol = this.context.symbol;
 
         const client = new ApolloClient({
-            uri: 'http://localhost:4000/',
+            uri: 'https://e-commerce-2.onrender.com/',
             cache: new InMemoryCache(),
         });
 

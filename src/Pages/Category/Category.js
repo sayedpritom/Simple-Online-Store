@@ -20,7 +20,7 @@ class Category extends Component {
 
   loadData() {
     const client = new ApolloClient({
-      uri: 'http://localhost:4000/',
+      uri: 'https://e-commerce-2.onrender.com/',
       cache: new InMemoryCache(),
     });
 
