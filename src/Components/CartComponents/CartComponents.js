@@ -4,6 +4,7 @@ import CartComponent from '../CartComponent/CartComponent'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import './CartComponents.css';
 import { toast } from 'react-toastify';
+import Loading from '../Loading/Loading';
 
 class CartComponents extends Component {
     static contextType = UserContext
@@ -86,8 +87,23 @@ class CartComponents extends Component {
 
         const grandTotal = (totalPrice + tax).toFixed(2);
 
-        const notify = () => toast.success("Order placed successfully! Thank you.", {theme: "dark"});
+        const notify = () => toast.success("Order placed successfully! Thank you.", { theme: "dark" });
 
+        if (!this.state.totalPrice && miniCart) {
+            return (
+                <div className='cart-loading-mini'>
+                    <Loading />
+                </div>
+            )
+        }
+
+        if (!this.state.totalPrice) {
+            return (
+                <div className='cart-loading'>
+                    <Loading />
+                </div>
+            )
+        }
 
         return (
             <div className={`${miniCart && 'miniCart'}`}>

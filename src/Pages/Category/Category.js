@@ -4,6 +4,7 @@ import './Category.css';
 import Card from './Card/Card';
 import UserContext from '../../Context/UserContext';
 import withRouter from '../../Components/HOC/withRouter';
+import LoadingForCategory from '../../Components/LoadingForCategory/LoadingForCategory';
 
 
 class Category extends Component {
@@ -14,11 +15,13 @@ class Category extends Component {
     this.state = {
       products: [],
       category: "all",
-      currency: "$"
+      currency: "$",
+      loading: false
     }
   }
 
   loadData() {
+    this.state.loading === false && this.setState({loading: true})
     const client = new ApolloClient({
       uri: 'https://e-commerce-2.onrender.com/',
       cache: new InMemoryCache(),
@@ -56,10 +59,8 @@ class Category extends Component {
               `,
       })
       .then((result) => {
-
-        this.setState({ products: result.data.category.products, currency: this.context.symbol, category: this.context.category })
+        this.setState({ products: result.data.category.products, currency: this.context.symbol, category: this.context.category, loading: false })
         setCategory(this.props.params.category)
-
       });
   }
 
@@ -80,7 +81,11 @@ class Category extends Component {
 
   }
 
+
   render() {
+    if (this.state.loading) {
+      return <LoadingForCategory/>
+    }
     return (
       <div>
         <h1 className='category-name'>{this.context.category?.charAt(0).toUpperCase() + this.context.category?.slice(1)}</h1>

@@ -4,6 +4,7 @@ import withRouter from '../../../Components/HOC/withRouter';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
 import UserContext from '../../../Context/UserContext';
 import parse from 'html-react-parser';
+import LoadingForCategory from '../../../Components/LoadingForCategory/LoadingForCategory';
 
 
 class ProductDescription extends Component {
@@ -17,12 +18,14 @@ class ProductDescription extends Component {
             price: {},
             preview: "",
             color: "",
-            otherAttributes: {}
+            otherAttributes: {},
+            loading: false
         }
     }
 
     // Get product details by product id
     loadData() {
+        this.state.loading === false && this.setState({loading: true})
         const client = new ApolloClient({
             uri: 'https://e-commerce-2.onrender.com/',
             cache: new InMemoryCache(),
@@ -73,7 +76,8 @@ class ProductDescription extends Component {
                         label: price.currency.label,
                         symbol: price.currency.symbol,
                         amount: price.amount
-                    }
+                    },
+                    loading: false
 
                 })
 
@@ -140,6 +144,10 @@ class ProductDescription extends Component {
             const index = currentCartContext.length + 1;
 
             this.context.setCart({ id, color, quantity, totalPrice, otherAttributes, index })
+        }
+
+        if(this.state.loading) {
+            return <LoadingForCategory/>
         }
 
         return (
