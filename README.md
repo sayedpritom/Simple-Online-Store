@@ -1,4 +1,6 @@
-# Scandiweb Assignment
+# Simple online store
+
+## Live Site:https://simple-online-store-77f9d.web.app/ 
 
 ## Website Features and Functionalities:
 * Users can add/remove products and change their amounts in cart - on the cart page itself.
